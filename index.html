@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOUSSEN</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta grises */
+    --g0:  #0a0a0a;   /* negro profundo */
+    --g1:  #141414;   /* casi negro */
+    --g2:  #1e1e1e;   /* gris muy oscuro */
+    --g3:  #2c2c2c;   /* gris oscuro */
+    --g4:  #444;      /* gris medio */
+    --g5:  #888;      /* gris neutro */
+    --g6:  #b8b8b8;   /* gris claro */
+    --g7:  #d8d8d4;   /* gris casi blanco cálido */
+    --g8:  #eeece8;   /* blanco roto */
+    --g9:  #f5f4f0;   /* blanco crema */
+
+    /* Roles */
+    --dark-bg:    var(--g0);
+    --dark-card:  var(--g1);
+    --dark-border:var(--g2);
+    --dark-text:  var(--g9);
+    --dark-muted: var(--g5);
+
+    --light-bg:   var(--g9);
+    --light-card: #fff;
+    --light-border:var(--g7);
+    --light-text: var(--g0);
+    --light-muted: var(--g5);
+
+    --accent:     var(--g7);   /* gris claro como acento */
+    --accent-dk:  var(--g6);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; overflow-x:hidden; cursor:none; }
+
+  /* Cursor */
+  #cur { position:fixed; width:10px; height:10px; background:var(--g7); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .15s,height .15s,background .2s; }
+  #cur.big { width:36px; height:36px; background:transparent; border:1.5px solid var(--g7); border-radius:50%; }
+
+  /* ── DARK ZONE (ticker + nav + hero) ───────────────── */
+  .zone-dark { background:var(--dark-bg); color:var(--dark-text); }
+
+  /* Ticker */
+  .ticker { background:var(--g2); border-bottom:1px solid var(--g3); padding:7px 0; overflow:hidden; }
+  .ticker-track { display:inline-block; animation:tick 20s linear infinite; white-space:nowrap; }
+  .ticker-track span { font-family:'Space Mono',monospace; font-size:10px; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:var(--g6); padding:0 36px; }
+  .ticker-track span em { color:var(--g8); font-style:normal; }
+  @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* Nav */
+  nav { position:sticky; top:0; z-index:500; background:rgba(10,10,10,.95); backdrop-filter:blur(16px); border-bottom:1px solid var(--g2); display:flex; align-items:center; justify-content:space-between; padding:0 52px; height:64px; }
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.14em; color:var(--g9); text-decoration:none; }
+  .logo-dot { color:var(--g5); }
+  .nav-links { display:flex; gap:36px; list-style:none; }
+  .nav-links a { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--g4); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:var(--g8); }
+  .cart-btn { background:transparent; border:1px solid var(--g3); color:var(--g6); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:9px 22px; cursor:none; transition:all .2s; position:relative; }
+  .cart-btn:hover { border-color:var(--g6); color:var(--g9); }
+  .cart-btn .badge { position:absolute; top:-7px; right:-7px; background:var(--g7); color:var(--g0); font-size:9px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  /* Hero */
+  .hero { min-height:calc(100vh - 64px - 33px); display:grid; grid-template-columns:55% 45%; background:var(--dark-bg); }
+  .hero-l { padding:64px 64px 88px; display:flex; flex-direction:column; justify-content:flex-end; position:relative; }
+  .hero-eyebrow { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:var(--g5); margin-bottom:28px; display:flex; align-items:center; gap:12px; }
+  .hero-eyebrow::before { content:''; width:28px; height:1px; background:var(--g3); display:inline-block; }
+  .hero-h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(80px,10vw,150px); line-height:.88; letter-spacing:.03em; margin-bottom:32px; color:var(--g8); }
+  .hero-h1 .stroke { color:transparent; -webkit-text-stroke:1.5px var(--g3); }
+  .hero-h1 .mid { color:var(--g6); }
+  .hero-sub { font-size:13px; color:var(--g5); line-height:1.85; max-width:320px; margin-bottom:52px; letter-spacing:.02em; }
+  .hero-actions { display:flex; gap:20px; align-items:center; }
+  .btn-light { background:var(--g8); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:15px 32px; border:none; cursor:none; text-decoration:none; display:inline-block; transition:transform .2s,background .2s; }
+  .btn-light:hover { transform:translateY(-3px); background:var(--g9); }
+  .btn-ghost-dk { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--g4); text-decoration:none; border-bottom:1px solid var(--g3); padding-bottom:2px; transition:color .2s,border-color .2s; }
+  .btn-ghost-dk:hover { color:var(--g7); border-color:var(--g6); }
+
+  .hero-r { background:var(--g1); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; border-left:1px solid var(--g2); }
+  .hero-r-ph { text-align:center; }
+  .hero-r-ph .ico { font-size:48px; display:block; margin-bottom:16px; opacity:.2; }
+  .hero-r-ph p { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--g3); }
+  .hero-num { position:absolute; bottom:16px; right:24px; font-family:'Bebas Neue',sans-serif; font-size:200px; line-height:1; color:transparent; -webkit-text-stroke:1px var(--g2); pointer-events:none; }
+  .hero-tag-box { position:absolute; top:28px; left:28px; border:1px solid var(--g3); padding:7px 14px; }
+  .hero-tag-box span { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--g5); }
+
+  /* Transition strip — dark to light */
+  .strip { background:linear-gradient(to bottom, var(--dark-bg) 0%, var(--light-bg) 100%); padding:6px 52px; display:flex; align-items:center; justify-content:space-between; }
+  .strip span { font-family:'Space Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--g4); }
+
+  /* ── LIGHT ZONE (products + rest) ──────────────────── */
+  .zone-light { background:var(--light-bg); color:var(--light-text); }
+
+  /* Section */
+  .section { padding:72px 52px; }
+  .sec-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:40px; }
+  .sec-title { font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:.04em; line-height:1; color:var(--g0); }
+  .sec-title em { color:var(--g5); font-style:normal; }
+  .sec-more { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--g5); text-decoration:none; border-bottom:1px solid var(--g7); padding-bottom:2px; transition:color .2s,border-color .2s; }
+  .sec-more:hover { color:var(--g0); border-color:var(--g0); }
+
+  /* Filters */
+  .filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:36px; }
+  .fb { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; padding:7px 16px; border:1px solid var(--g7); background:transparent; color:var(--g5); cursor:none; transition:all .2s; }
+  .fb.on,.fb:hover { border-color:var(--g0); color:var(--g0); background:rgba(0,0,0,.05); }
+
+  /* Product grid */
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .pcard { background:var(--light-card); border:1px solid var(--light-border); overflow:hidden; position:relative; cursor:none; transition:box-shadow .25s,transform .25s; }
+  .pcard:hover { box-shadow:0 8px 32px rgba(0,0,0,.1); transform:translateY(-4px); z-index:3; }
+  .pimg { aspect-ratio:3/4; background:var(--g8); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
+  .pimg .ph { font-size:32px; opacity:.2; }
+  .pimg .ph-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g7); }
+  .pbadge { position:absolute; top:10px; left:10px; background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; }
+  .pbadge.lt { background:var(--g7); color:var(--g0); }
+  .povl { position:absolute; inset:0; background:rgba(245,244,240,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0; transition:opacity .22s; }
+  .pcard:hover .povl { opacity:1; }
+  .povl-btn { font-family:'Space Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:10px 0; width:148px; border:none; cursor:none; text-align:center; transition:all .15s; }
+  .povl-btn.p { background:var(--g0); color:var(--g9); }
+  .povl-btn.p:hover { background:var(--g2); }
+  .povl-btn.s { background:transparent; border:1px solid var(--g3); color:var(--g0); }
+  .povl-btn.s:hover { background:var(--g8); }
+  .pinfo { padding:14px 16px 18px; border-top:1px solid var(--light-border); }
+  .pname { font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px; color:var(--g0); }
+  .psub { font-size:12px; color:var(--g5); margin-bottom:10px; }
+  .pfoot { display:flex; align-items:center; justify-content:space-between; }
+  .pprice { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; color:var(--g0); }
+  .psizes { display:flex; gap:3px; }
+  .sz { width:20px; height:20px; border:1px solid var(--g7); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:7px; color:var(--g7); }
+  .sz.av { border-color:var(--g5); color:var(--g5); }
+
+  /* Virtual try-on — dark again */
+  .vto { padding:88px 52px; background:var(--g1); color:var(--g8); position:relative; overflow:hidden; }
+  .vto::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--g4),transparent); }
+  .vto::after  { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--g3),transparent); }
+  .vto-bg-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:300px; color:transparent; -webkit-text-stroke:1px var(--g2); white-space:nowrap; line-height:1; pointer-events:none; }
+  .vto-inner { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:88px; align-items:center; max-width:1100px; margin:0 auto; }
+  .vto-tag { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--g5); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .vto-tag::before { content:''; width:24px; height:1px; background:var(--g4); display:inline-block; }
+  .vto-h2 { font-family:'Bebas Neue',sans-serif; font-size:72px; line-height:.9; margin-bottom:24px; color:var(--g8); }
+  .vto-h2 em { color:var(--g6); font-style:normal; }
+  .vto-p { font-size:13px; color:var(--g5); line-height:1.85; max-width:360px; margin-bottom:36px; }
+  .steps { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; }
+  .step { display:flex; align-items:center; gap:16px; }
+  .step-n { width:30px; height:30px; border:1px solid var(--g3); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; color:var(--g5); flex-shrink:0; }
+  .step-t { font-size:13px; color:var(--g4); }
+  .vto-widget { background:var(--g0); border:1px solid var(--g2); padding:36px; }
+  .upload-z { border:1px dashed var(--g3); padding:44px 28px; text-align:center; margin-bottom:20px; transition:border-color .2s; cursor:none; }
+  .upload-z:hover { border-color:var(--g5); }
+  .upload-z .ico { font-size:26px; display:block; margin-bottom:10px; opacity:.3; }
+  .upload-z .ut { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--g4); margin-bottom:6px; }
+  .upload-z .us { font-size:11px; color:var(--g3); }
+  .vto-sel { width:100%; background:var(--g1); border:1px solid var(--g2); color:var(--g6); font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.08em; padding:11px 14px; margin-bottom:14px; appearance:none; cursor:none; }
+  .vto-btn { width:100%; background:var(--g8); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:13px; border:none; cursor:none; transition:background .2s; }
+  .vto-btn:hover { background:var(--g9); }
+
+  /* Banner — light */
+  .banner { background:var(--g8); border-top:1px solid var(--g7); border-bottom:1px solid var(--g7); padding:56px 52px; display:flex; align-items:center; justify-content:space-between; gap:40px; }
+  .banner h2 { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--g0); line-height:.95; max-width:480px; }
+  .banner-r { display:flex; align-items:center; gap:20px; flex-shrink:0; }
+  .banner-r p { font-size:13px; color:var(--g5); max-width:180px; line-height:1.65; }
+  .btn-dk { background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:15px 30px; border:none; cursor:none; white-space:nowrap; transition:background .2s; }
+  .btn-dk:hover { background:var(--g2); }
+
+  /* Footer — dark */
+  footer { background:var(--g0); border-top:1px solid var(--g2); padding:60px 52px 28px; color:var(--g8); }
+  .ft-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:52px; margin-bottom:52px; }
+  .ft-logo { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:.12em; margin-bottom:16px; color:var(--g8); }
+  .ft-logo span { color:var(--g4); }
+  .ft-desc { font-size:12px; color:var(--g4); line-height:1.75; max-width:240px; }
+  .ft-col h4 { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--g5); margin-bottom:18px; }
+  .ft-col ul { list-style:none; }
+  .ft-col li { margin-bottom:9px; }
+  .ft-col a { font-size:12px; color:var(--g4); text-decoration:none; transition:color .2s; }
+  .ft-col a:hover { color:var(--g8); }
+  .ft-bot { border-top:1px solid var(--g2); padding-top:20px; display:flex; justify-content:space-between; }
+  .ft-bot p { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--g3); }
+
+  /* Cart sidebar */
+  .cart-side { position:fixed; top:0; right:-420px; width:420px; height:100vh; background:var(--g9); border-left:1px solid var(--g7); z-index:1000; transition:right .3s cubic-bezier(.25,.46,.45,.94); display:flex; flex-direction:column; color:var(--g0); }
+  .cart-side.on { right:0; }
+  .cart-hd { padding:24px 28px; border-bottom:1px solid var(--g7); display:flex; align-items:center; justify-content:space-between; }
+  .cart-hd h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:.08em; color:var(--g0); }
+  .close-c { background:none; border:none; color:var(--g5); font-size:18px; cursor:none; transition:color .2s; }
+  .close-c:hover { color:var(--g0); }
+  .cart-body { flex:1; overflow-y:auto; padding:24px 28px; }
+  .ci { display:flex; gap:14px; padding-bottom:18px; margin-bottom:18px; border-bottom:1px solid var(--g7); }
+  .ci-img { width:68px; height:84px; background:var(--g8); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .ci-n { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; color:var(--g0); }
+  .ci-s { font-size:11px; color:var(--g5); margin-bottom:10px; }
+  .ci-p { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--g0); }
+  .cart-ft { padding:22px 28px; border-top:1px solid var(--g7); }
+  .c-tot { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+  .c-tot-l { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--g5); }
+  .c-tot-a { font-family:'Bebas Neue',sans-serif; font-size:30px; color:var(--g0); }
+  .chk { width:100%; background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:14px; border:none; cursor:none; margin-bottom:10px; transition:background .2s; }
+  .chk:hover { background:var(--g2); }
+  .c-note { font-size:10px; color:var(--g5); text-align:center; line-height:1.6; }
+  .ovl { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; opacity:0; pointer-events:none; transition:opacity .3s; }
+  .ovl.on { opacity:1; pointer-events:all; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(70px); background:var(--g0); color:var(--g8); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:13px 26px; z-index:2000; transition:transform .3s cubic-bezier(.25,.46,.45,.94); border-top:2px solid var(--g5); }
+  .toast.on { transform:translateX(-50%) translateY(0); }
+
+  /* Fade in */
+  .fi { opacity:0; animation:fadeUp .7s ease forwards; }
+  .d1{animation-delay:.1s} .d2{animation-delay:.22s} .d3{animation-delay:.34s} .d4{animation-delay:.46s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div class="ovl" id="ovl" onclick="closeCart()"></div>
+
+<!-- ── DARK ZONE ── -->
+<div class="zone-dark">
+
+  <!-- Ticker -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>Nueva colección</span>
+      <span>///</span>
+      <span>Envíos a todo Uruguay</span>
+      <span>///</span>
+      <span>Probador <em>virtual</em></span>
+      <span>///</span>
+      <span>Sin pago online · coordinamos por WhatsApp</span>
+      <span>///</span>
+      <span>Nueva colección</span>
+      <span>///</span>
+      <span>Envíos a todo Uruguay</span>
+      <span>///</span>
+      <span>Probador <em>virtual</em></span>
+      <span>///</span>
+      <span>Sin pago online · coordinamos por WhatsApp</span>
+      <span>///</span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="logo">TOUSSEN<span class="logo-dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="#productos">Colección</a></li>
+      <li><a href="#vto">Probador</a></li>
+      <li><a href="#">Nosotros</a></li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+    <button class="cart-btn" onclick="openCart()">
+      Carrito <span class="badge" id="cnt">0</span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-l">
+      <div class="hero-eyebrow fi d1">Drop 001 — 2025</div>
+      <h1 class="hero-h1 fi d2">
+        <span class="stroke">STREET</span><br>
+        <span class="mid">WEAR</span><br>
+        LOCAL
+      </h1>
+      <p class="hero-sub fi d3">Ropa que habla sin decir nada. Diseño urbano, identidad propia. Hecha en Uruguay para los que la ven antes de que llegue.</p>
+      <div class="hero-actions fi d4">
+        <a href="#productos" class="btn-light">Ver colección →</a>
+        <a href="#vto" class="btn-ghost-dk">Probador virtual</a>
+      </div>
+    </div>
+    <div class="hero-r">
+      <div class="hero-tag-box"><span>Drop 001</span></div>
+      <div class="hero-r-ph">
+        <span class="ico">📸</span>
+        <p>Foto de campaña</p>
+      </div>
+      <div class="hero-num">01</div>
+    </div>
+  </section>
+
+</div><!-- /zone-dark -->
+
+<!-- Transition strip -->
+<div class="strip">
+  <span>⬡ Drop 001 activo</span>
+  <span>Stock limitado</span>
+  <span>Envíos 48–72hs</span>
+</div>
+
+<!-- ── LIGHT ZONE ── -->
+<div class="zone-light">
+
+  <!-- Productos -->
+  <section class="section" id="productos">
+    <div class="sec-head">
+      <h2 class="sec-title">COLECCIÓN <em>001</em></h2>
+      <a href="#" class="sec-more">Ver todo →</a>
+    </div>
+    <div class="filters">
+      <button class="fb on" onclick="filt(this,'all')">Todo</button>
+      <button class="fb" onclick="filt(this,'remeras')">Remeras</button>
+      <button class="fb" onclick="filt(this,'buzos')">Buzos</button>
+      <button class="fb" onclick="filt(this,'pantalones')">Pantalones</button>
+      <button class="fb" onclick="filt(this,'accesorios')">Accesorios</button>
+    </div>
+    <div class="grid" id="grid">
+
+      <div class="pcard" data-cat="remeras">
+        <div class="pimg"><span class="ph">👕</span><span class="ph-label">Foto producto</span>
+          <span class="pbadge lt">NUEVO</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Remera Oversized',1200)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Remera Oversized</div><div class="psub">Negro / Blanco</div>
+          <div class="pfoot"><div class="pprice">$1.200</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="buzos">
+        <div class="pimg"><span class="ph">🧥</span><span class="ph-label">Foto producto</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Buzo Hoodie',2400)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Buzo Hoodie</div><div class="psub">Gris / Crudo</div>
+          <div class="pfoot"><div class="pprice">$2.400</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz">L</div><div class="sz">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="pantalones">
+        <div class="pimg"><span class="ph">👖</span><span class="ph-label">Foto producto</span>
+          <span class="pbadge">ÚLTIMOS</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Cargo Pants',3100)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Cargo Pants</div><div class="psub">Oliva / Negro</div>
+          <div class="pfoot"><div class="pprice">$3.100</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz">M</div><div class="sz">L</div><div class="sz av">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="remeras">
+        <div class="pimg"><span class="ph">👕</span><span class="ph-label">Foto producto</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Remera Gráfica',1500)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Remera Gráfica</div><div class="psub">Blanco Roto</div>
+          <div class="pfoot"><div class="pprice">$1.500</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz av">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="accesorios">
+        <div class="pimg"><span class="ph">🧢</span><span class="ph-label">Foto producto</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Gorra 6-Panel',800)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Gorra 6-Panel</div><div class="psub">Negro / Blanco</div>
+          <div class="pfoot"><div class="pprice">$800</div>
+          <div class="psizes"><div class="sz av">U</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="buzos">
+        <div class="pimg"><span class="ph">🧥</span><span class="ph-label">Foto producto</span>
+          <span class="pbadge lt">HOT</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Crewneck Heavy',2200)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Crewneck Heavy</div><div class="psub">Negro Vintage</div>
+          <div class="pfoot"><div class="pprice">$2.200</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz av">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="pantalones">
+        <div class="pimg"><span class="ph">👖</span><span class="ph-label">Foto producto</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Jogger Tech',2800)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Jogger Tech</div><div class="psub">Negro / Gris</div>
+          <div class="pfoot"><div class="pprice">$2.800</div>
+          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz">XL</div></div></div></div>
+      </div>
+
+      <div class="pcard" data-cat="accesorios">
+        <div class="pimg"><span class="ph">🎒</span><span class="ph-label">Foto producto</span>
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('Tote Bag',600)">+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo"><div class="pname">Tote Bag</div><div class="psub">Natural / Negro</div>
+          <div class="pfoot"><div class="pprice">$600</div>
+          <div class="psizes"><div class="sz av">U</div></div></div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Probador virtual -->
+  <section class="vto" id="vto">
+    <div class="vto-bg-text">PROBATE</div>
+    <div class="vto-inner">
+      <div class="vto-txt">
+        <div class="vto-tag">Exclusivo Toussen</div>
+        <h2 class="vto-h2">PROBADOR<br><em>VIRTUAL</em></h2>
+        <p class="vto-p">Subí una foto y mirá cómo te queda la prenda antes de comprar. Tecnología única en Uruguay.</p>
+        <div class="steps">
+          <div class="step"><div class="step-n">01</div><div class="step-t">Subís una foto tuya de frente</div></div>
+          <div class="step"><div class="step-n">02</div><div class="step-t">Elegís la prenda que te interesa</div></div>
+          <div class="step"><div class="step-n">03</div><div class="step-t">Ves cómo te queda antes de comprar</div></div>
+        </div>
+        <a href="#" class="btn-light" style="display:inline-block">Probar ahora →</a>
+      </div>
+      <div class="vto-widget">
+        <div class="upload-z">
+          <span class="ico">📷</span>
+          <div class="ut">Subí tu foto</div>
+          <div class="us">JPG o PNG · Máx. 10MB</div>
+        </div>
+        <select class="vto-sel">
+          <option>Seleccioná una prenda...</option>
+          <option>Remera Oversized — $1.200</option>
+          <option>Buzo Hoodie — $2.400</option>
+          <option>Cargo Pants — $3.100</option>
+          <option>Crewneck Heavy — $2.200</option>
+        </select>
+        <button class="vto-btn">GENERAR PRUEBA →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banner suscripción -->
+  <div class="banner">
+    <h2>DROPS ANTES QUE NADIE.</h2>
+    <div class="banner-r">
+      <p>Unite a la lista y sé el primero en enterarte.</p>
+      <button class="btn-dk">SUSCRIBIRME</button>
+    </div>
+  </div>
+
+</div><!-- /zone-light -->
+
+<!-- Footer -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo">TOUSSEN<span>.</span></div>
+      <p class="ft-desc">Ropa urbana con identidad propia. Hecha para los que la ven antes de que llegue.</p>
+    </div>
+    <div class="ft-col"><h4>Tienda</h4><ul>
+      <li><a href="#">Colección</a></li>
+      <li><a href="#">Novedades</a></li>
+      <li><a href="#">Probador Virtual</a></li>
+    </ul></div>
+    <div class="ft-col"><h4>Info</h4><ul>
+      <li><a href="#">Cómo comprar</a></li>
+      <li><a href="#">Envíos</a></li>
+      <li><a href="#">Cambios</a></li>
+      <li><a href="#">FAQ</a></li>
+    </ul></div>
+    <div class="ft-col"><h4>Contacto</h4><ul>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">WhatsApp</a></li>
+      <li><a href="#">Email</a></li>
+    </ul></div>
+  </div>
+  <div class="ft-bot">
+    <p>© 2025 Toussen — Todos los derechos reservados</p>
+    <p>Hecho en Uruguay 🇺🇾</p>
+  </div>
+</footer>
+
+<!-- Cart sidebar -->
+<div class="cart-side" id="cartSide">
+  <div class="cart-hd">
+    <h3>TU CARRITO</h3>
+    <button class="close-c" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <p style="font-family:'Space Mono',monospace;font-size:10px;color:#aaa;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:40px 0">Tu carrito está vacío</p>
+  </div>
+  <div class="cart-ft">
+    <div class="c-tot"><span class="c-tot-l">Total</span><span class="c-tot-a" id="tot">$0</span></div>
+    <button class="chk" onclick="checkout()">HACER PEDIDO →</button>
+    <p class="c-note">Sin pago online · Te contactamos para coordinar</p>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Agregado al carrito</div>
+
+<script type="module">
+import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp }
+                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── Firebase config ──
+const firebaseConfig = {
+  apiKey: "AIzaSyDluOazVJb-op1_qTWKZsKgGnYO52lWu4k",
+  authDomain: "toussen.firebaseapp.com",
+  projectId: "toussen",
+  storageBucket: "toussen.firebasestorage.app",
+  messagingSenderId: "135428395325",
+  appId: "1:135428395325:web:ac7c670341b7c587e9b554"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Cursor ──
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const inDark = el && el.closest('.zone-dark, .vto, footer');
+  cur.style.background = inDark ? '#d8d8d4' : '#2c2c2c';
+});
+
+// ── Carrito ──
+let cart = [];
+
+window.add = function(name, price, talle) {
+  cart.push({ name, price, talle: talle||'—' });
+  updateCart(); showToast();
+};
+function updateCart() {
+  document.getElementById('cnt').textContent = cart.length;
+  const total = cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('tot').textContent = '$'+total.toLocaleString('es-UY');
+  document.getElementById('cartBody').innerHTML = cart.length === 0
+    ? `<p style="font-family:'Space Mono',monospace;font-size:10px;color:#aaa;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:40px 0">Tu carrito está vacío</p>`
+    : cart.map((i,idx)=>`
+        <div class="ci">
+          <div class="ci-img">👕</div>
+          <div style="flex:1">
+            <div class="ci-n">${i.name}</div>
+            <div class="ci-s">Talle: ${i.talle}</div>
+            <div class="ci-p">$${i.price.toLocaleString('es-UY')}</div>
+          </div>
+          <button onclick="removeItem(${idx})" style="background:none;border:none;color:#888;font-size:14px;cursor:pointer;align-self:flex-start;">×</button>
+        </div>`).join('');
+}
+window.removeItem = idx => { cart.splice(idx,1); updateCart(); };
+window.openCart   = () => { document.getElementById('cartSide').classList.add('on'); document.getElementById('ovl').classList.add('on'); };
+window.closeCart  = () => { document.getElementById('cartSide').classList.remove('on'); document.getElementById('ovl').classList.remove('on'); };
+function showToast() {
+  const t = document.getElementById('toast'); t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2500); openCart();
+}
+
+// ── Checkout → guarda pedido en Firestore ──
+window.checkout = async function() {
+  if(!cart.length) return;
+  const nombre = prompt('¿Cuál es tu nombre completo?');
+  if(!nombre) return;
+  const tel = prompt('¿Tu número de WhatsApp (sin 0, ej: 9XXXXXXX)?');
+  if(!tel) return;
+  const total = cart.reduce((s,i)=>s+i.price,0);
+  const detalle = cart.map(i=>`${i.name} (${i.talle})`).join(', ');
+  const now = new Date();
+  const fechaStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  try {
+    await addDoc(collection(db,'pedidos'),{
+      nombre, telefono:tel, detalle, total,
+      estado:'PENDIENTE', fecha:serverTimestamp(), fechaStr,
+      items: cart.map(i=>({name:i.name,price:i.price,talle:i.talle}))
+    });
+    // Abrir WhatsApp
+    const msg = `Hola Toussen! 👋\nQuiero hacer un pedido:\n\n${detalle}\n\nTotal: $${total.toLocaleString('es-UY')}\n\nNombre: ${nombre}`;
+    window.open(`https://wa.me/598XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+    cart=[];updateCart();closeCart();
+    alert('¡Pedido registrado! Te redirigimos a WhatsApp para coordinar la entrega 🎉');
+  } catch(e) {
+    alert('Hubo un error al registrar el pedido. Intentá de nuevo.');
+  }
+};
+
+// ── Filtros ──
+window.filt = function(btn, cat) {
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
+  document.querySelectorAll('.pcard').forEach(c=>{
+    c.style.display = (cat==='all'||c.dataset.cat===cat)?'block':'none';
+  });
+};
+
+// ── Probador virtual ──
+window.goProbador = function() {
+  closeCart();
+  document.getElementById('vto').scrollIntoView({behavior:'smooth'});
+};
+
+// ── Cargar productos desde Firestore ──
+function renderProductos(productos) {
+  const grid = document.getElementById('grid');
+  if(!productos.length){
+    grid.innerHTML = `<p style="font-family:'Space Mono',monospace;font-size:10px;color:#888;letter-spacing:.12em;text-transform:uppercase;padding:40px 0;grid-column:1/-1">Cargando colección...</p>`;
+    return;
+  }
+  grid.innerHTML = productos.map(p=>{
+    const total = (p.s||0)+(p.m||0)+(p.l||0)+(p.xl||0);
+    const sizes = ['S','M','L','XL'].map(t=>{
+      const k = t.toLowerCase();
+      return `<div class="sz${p[k]>0?' av':''}">${t}</div>`;
+    }).join('');
+    const badge = p.badge ? `<span class="pbadge${p.badge==='NUEVO'||p.badge==='HOT'?' lt':''}">${p.badge}</span>` : '';
+    const colStr = (p.colores||[]).join(' / ')||'—';
+    return `
+      <div class="pcard" data-cat="${p.cat||''}">
+        <div class="pimg">
+          <span class="ph">👕</span>
+          <span class="ph-label">Foto producto</span>
+          ${badge}
+          ${total===0?'<span class="pbadge">AGOTADO</span>':''}
+          <div class="povl">
+            <button class="povl-btn p" onclick="add('${p.nombre.replace(/'/g,"\\'")}',${p.precio},'M')" ${total===0?'disabled':''}>+ Agregar</button>
+            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="pname">${p.nombre}</div>
+          <div class="psub">${colStr}</div>
+          <div class="pfoot">
+            <div class="pprice">$${(p.precio||0).toLocaleString('es-UY')}</div>
+            <div class="psizes">${sizes}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Re-registrar cursor en nuevas cards
+  document.querySelectorAll('button, a, .pcard').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+}
+
+// Listener en tiempo real — los productos se actualizan solos cuando el dueño hace cambios
+onSnapshot(query(collection(db,'productos'),orderBy('nombre')), snap => {
+  const prods = snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderProductos(prods);
+});
+
+// ── Cursor hover inicial ──
+document.querySelectorAll('button, a, .pcard').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+</script>
+</body>
+</html>
