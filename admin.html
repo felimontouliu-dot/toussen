@@ -394,10 +394,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--g0);color:var(--g8);overf
       <div class="view" id="view-stock">
         <div class="stitle">
           Productos
-          <button class="btn prim" onclick="openModal('modalProd')">+ Agregar producto</button>
+          <div class="btn-row">
+            <button class="btn" onclick="exportarExcel()">&#8595; Exportar Excel</button>
+            <button class="btn" onclick="document.getElementById('excelInput').click()">&#8593; Importar Excel</button>
+            <input type="file" id="excelInput" accept=".xlsx,.xls" style="display:none" onchange="importarExcel(this)">
+            <button class="btn prim" onclick="openModal('modalProd')">+ Agregar producto</button>
+          </div>
         </div>
+        <p style="font-size:11px;color:var(--g4);margin-bottom:14px;font-family:'Space Mono',monospace;letter-spacing:.06em;">
+          Columnas Excel: <strong style="color:var(--g6)">nombre &middot; categoria &middot; precio &middot; costo &middot; s &middot; m &middot; l &middot; xl &middot; colores &middot; badge</strong>
+        </p>
         <table class="tbl">
-          <thead><tr><th>Producto</th><th>Categoría</th><th>Colores</th><th>Precio</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+          <thead><tr><th>Producto</th><th>Cat.</th><th>Colores</th><th>Precio</th><th>Costo</th><th>Margen</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>Total</th><th>Estado</th><th></th></tr></thead>
           <tbody id="stockTbl"></tbody>
         </table>
       </div>
@@ -452,6 +460,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--g0);color:var(--g8);overf
         </select>
       </div>
       <div class="fg"><label>Precio (UYU)</label><input class="fi" id="np-precio" type="number" placeholder="1200"></div>
+      <div class="fg"><label>Costo (UYU)</label><input class="fi" id="np-costo" type="number" placeholder="600"></div>
       <div class="fg full">
         <label>Colores disponibles</label>
         <div class="color-chips" id="colorChips"></div>
@@ -762,15 +771,16 @@ window.guardarProducto = async () => {
   const l  = parseInt(document.getElementById('np-l').value)||0;
   const xl = parseInt(document.getElementById('np-xl').value)||0;
   const badge  = document.getElementById('np-badge').value;
+  const costo  = parseInt(document.getElementById('np-costo').value)||0;
   if(!nombre||!precio){ toast('Nombre y precio son obligatorios',true); return; }
   try {
     await addDoc(collection(db,'productos'),{
-      nombre,cat,precio,colores:coloresSeleccionados,s,m,l,xl,badge,
+      nombre,cat,precio,costo,colores:coloresSeleccionados,s,m,l,xl,badge,
       creado:serverTimestamp()
     });
     closeModal('modalProd');
     coloresSeleccionados=[];
-    ['np-nombre','np-precio','np-s','np-m','np-l','np-xl'].forEach(id=>document.getElementById(id).value='');
+    ['np-nombre','np-precio','np-costo','np-s','np-m','np-l','np-xl'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('np-badge').value='';
     renderChips();
     toast('Producto guardado ✓');
@@ -794,6 +804,9 @@ function renderStock() {
     const stM  = (p.m||0)===0?'style="color:var(--red)"':'';
     const stL  = (p.l||0)===0?'style="color:var(--red)"':'';
     const stXL = (p.xl||0)===0&&p.cat!=='accesorios'?'style="color:var(--red)"':'';
+    const costo = p.costo||0;
+    const margen = costo>0 ? Math.round(((p.precio-costo)/p.precio)*100) : null;
+    const margenStr = margen!==null ? `<span style="color:${margen>=50?'var(--green)':margen>=30?'var(--yellow)':'var(--red)'}">${margen}%</span>` : '<span style="color:var(--g4)">—</span>';
     return `<tr>
       <td>
         <div class="bold">${p.nombre}${p.badge?` <span class="tag pend" style="font-size:7px">${p.badge}</span>`:''}</div>
@@ -802,6 +815,8 @@ function renderStock() {
       <td style="text-transform:capitalize;color:var(--g5);font-size:11px">${p.cat}</td>
       <td style="font-size:10px;color:var(--g5)">${colStr}</td>
       <td class="mono bold">$${(p.precio||0).toLocaleString('es-UY')}</td>
+      <td class="mono" style="color:var(--g5)">$${costo.toLocaleString('es-UY')}</td>
+      <td class="mono">${margenStr}</td>
       <td class="mono" ${stS}>${p.s||0}</td>
       <td class="mono" ${stM}>${p.m||0}</td>
       <td class="mono" ${stL}>${p.l||0}</td>
@@ -880,6 +895,62 @@ window.crearUsuario = async () => {
   }
 };
 
+// ─────────────────────────────────────────────
+// EXCEL IMPORT / EXPORT
+// ─────────────────────────────────────────────
+window.exportarExcel = function() {
+  if(!productos.length){ toast('No hay productos para exportar',true); return; }
+  const rows = [['nombre','categoria','precio','costo','s','m','l','xl','colores','badge']];
+  productos.forEach(p => rows.push([
+    p.nombre||'', p.cat||'', p.precio||0, p.costo||0,
+    p.s||0, p.m||0, p.l||0, p.xl||0,
+    (p.colores||[]).join(', '), p.badge||''
+  ]));
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Productos');
+  XLSX.writeFile(wb, 'toussen_productos.xlsx');
+  toast('Excel exportado ✓');
+};
+
+window.importarExcel = async function(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws);
+      if(!rows.length){ toast('El Excel está vacío',true); return; }
+      let ok=0, err=0;
+      for(const r of rows) {
+        const nombre = r['nombre']||r['Nombre']||'';
+        if(!nombre) continue;
+        try {
+          await addDoc(collection(db,'productos'),{
+            nombre: String(nombre),
+            cat:    String(r['categoria']||r['Categoria']||'remeras').toLowerCase(),
+            precio: parseInt(r['precio']||r['Precio'])||0,
+            costo:  parseInt(r['costo']||r['Costo'])||0,
+            s:      parseInt(r['s']||r['S'])||0,
+            m:      parseInt(r['m']||r['M'])||0,
+            l:      parseInt(r['l']||r['L'])||0,
+            xl:     parseInt(r['xl']||r['XL'])||0,
+            colores:String(r['colores']||r['Colores']||'').split(',').map(c=>c.trim()).filter(Boolean),
+            badge:  String(r['badge']||r['Badge']||''),
+            creado: serverTimestamp()
+          });
+          ok++;
+        } catch(e){ err++; }
+      }
+      toast(`${ok} productos importados${err?` · ${err} errores`:''}`);
+    } catch(e){ toast('Error al leer el Excel',true); }
+    input.value='';
+  };
+  reader.readAsArrayBuffer(file);
+};
+
 function renderUsuarios(admins) {
   document.getElementById('userList').innerHTML = admins.length
     ? admins.map(a=>`
@@ -893,5 +964,6 @@ function renderUsuarios(admins) {
     : '<p style="font-size:12px;color:var(--g5)">No hay admins registrados en la base de datos.</p>';
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
