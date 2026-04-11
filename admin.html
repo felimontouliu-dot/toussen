@@ -260,6 +260,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--g0);color:var(--g8);overf
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.err{border-left-color:var(--red);}
 
+/* Dash tabs */
+.dash-tab{
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  padding:10px 24px;border:none;border-bottom:2px solid transparent;
+  background:transparent;color:var(--g4);cursor:pointer;transition:all .15s;
+}
+.dash-tab:hover{color:var(--g7);}
+.dash-tab.act{color:var(--g8);border-bottom-color:var(--g7);}
+
 /* Loading */
 .loading{
   display:flex;align-items:center;justify-content:center;
@@ -354,25 +363,115 @@ body{font-family:'DM Sans',sans-serif;background:var(--g0);color:var(--g8);overf
 
       <!-- DASHBOARD -->
       <div class="view act" id="view-dash">
-        <div class="kpi-row">
-          <div class="kpi g"><div class="kpi-lbl">Ventas este mes</div><div class="kpi-val" id="kpiVentas">$0</div><div class="kpi-sub" id="kpiVentasSub">Cargando...</div></div>
-          <div class="kpi y"><div class="kpi-lbl">Pedidos pendientes</div><div class="kpi-val" id="kpiPend">0</div><div class="kpi-sub">Requieren atención</div></div>
-          <div class="kpi b"><div class="kpi-lbl">Productos activos</div><div class="kpi-val" id="kpiProds">0</div><div class="kpi-sub">En catálogo</div></div>
-          <div class="kpi r"><div class="kpi-lbl">Stock bajo</div><div class="kpi-val" id="kpiBajo">0</div><div class="kpi-sub">Reponer pronto</div></div>
+
+        <!-- Tabs -->
+        <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--g2)">
+          <button class="dash-tab act" id="tabOp" onclick="switchDashTab('op')">
+            <span style="margin-right:6px">◎</span> Operaciones
+          </button>
+          <button class="dash-tab" id="tabMet" onclick="switchDashTab('met')">
+            <span style="margin-right:6px">$</span> Métricas
+          </button>
         </div>
-        <div class="chart-row">
-          <div class="chart-box">
-            <div class="chart-title">Ventas últimos 6 meses (UYU)</div>
-            <div class="bar-chart" id="barChart"></div>
+
+        <!-- TAB OPERACIONES -->
+        <div id="dashOp">
+
+          <!-- KPIs operativos -->
+          <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+            <div class="kpi y">
+              <div class="kpi-lbl">Pedidos pendientes</div>
+              <div class="kpi-val" id="kpiPend">0</div>
+              <div class="kpi-sub">Requieren atención</div>
+            </div>
+            <div class="kpi b">
+              <div class="kpi-lbl">Productos activos</div>
+              <div class="kpi-val" id="kpiProds">0</div>
+              <div class="kpi-sub">En catálogo</div>
+            </div>
+            <div class="kpi r">
+              <div class="kpi-lbl">Stock bajo</div>
+              <div class="kpi-val" id="kpiBajo">0</div>
+              <div class="kpi-sub">Productos a reponer</div>
+            </div>
           </div>
-          <div class="chart-box">
-            <div class="chart-title">Por categoría</div>
-            <div class="pie-list" id="pieList"></div>
+
+          <!-- Alertas + Pedidos -->
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:14px">
+            <div class="chart-box" style="padding:18px">
+              <div class="chart-title" style="margin-bottom:12px">Stock por agotarse</div>
+              <div id="alertasStock" style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:11px;color:var(--g4);font-family:\'Space Mono\',monospace">Sin alertas</span>
+              </div>
+            </div>
+            <div class="chart-box" style="padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div class="chart-title" style="margin:0">Pedidos en curso</div>
+                <button class="btn" onclick="document.querySelector('[data-view=pedidos]').click()">Ver todos →</button>
+              </div>
+              <table class="tbl"><thead><tr><th>#</th><th>Cliente</th><th>Detalle</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+              <tbody id="dashPedTbl"></tbody></table>
+            </div>
           </div>
+
         </div>
-        <div class="stitle">Últimos pedidos <button class="btn" onclick="document.querySelector('[data-view=pedidos]').click()">Ver todos →</button></div>
-        <table class="tbl"><thead><tr><th>#</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Estado</th><th></th></tr></thead>
-        <tbody id="dashPedTbl"></tbody></table>
+
+        <!-- TAB MÉTRICAS -->
+        <div id="dashMet" style="display:none">
+
+          <!-- KPIs financieros -->
+          <div class="kpi-row" style="margin-bottom:14px">
+            <div class="kpi g">
+              <div class="kpi-lbl">Ventas este mes</div>
+              <div class="kpi-val" id="kpiVentas">$0</div>
+              <div class="kpi-sub" id="kpiVentasSub" style="color:var(--g5)">vs mes anterior</div>
+            </div>
+            <div class="kpi b">
+              <div class="kpi-lbl">Ganancia neta</div>
+              <div class="kpi-val" id="kpiNeta">$0</div>
+              <div class="kpi-sub">Ingresos menos gastos</div>
+            </div>
+            <div class="kpi y">
+              <div class="kpi-lbl">Pedidos este mes</div>
+              <div class="kpi-val" id="kpiPedMes">0</div>
+              <div class="kpi-sub">Total del período</div>
+            </div>
+            <div class="kpi r">
+              <div class="kpi-lbl">Gastos del mes</div>
+              <div class="kpi-val" id="kpiGastMes">$0</div>
+              <div class="kpi-sub">Egresos registrados</div>
+            </div>
+          </div>
+
+          <!-- Gráfico + Más vendidos -->
+          <div class="chart-row" style="margin-bottom:14px">
+            <div class="chart-box">
+              <div class="chart-title">Ventas últimos 6 meses (UYU)</div>
+              <div class="bar-chart" id="barChart"></div>
+            </div>
+            <div class="chart-box">
+              <div class="chart-title">Productos más vendidos</div>
+              <div id="topProductos" style="display:flex;flex-direction:column;gap:8px"></div>
+            </div>
+          </div>
+
+          <!-- Stats adicionales -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <div class="chart-box" style="padding:18px">
+              <div class="chart-title">Por categoría</div>
+              <div class="pie-list" id="pieList"></div>
+            </div>
+            <div class="chart-box" style="padding:18px">
+              <div class="chart-title">Margen promedio</div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px" id="margenStats"></div>
+            </div>
+            <div class="chart-box" style="padding:18px">
+              <div class="chart-title">Resumen del mes</div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px" id="resumenMes"></div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       <!-- PEDIDOS -->
@@ -653,27 +752,38 @@ function initListeners() {
 // DASHBOARD
 // ─────────────────────────────────────────────
 function renderDash() {
-  // Ventas del mes actual
   const now = new Date();
-  const mesActual = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const ventasMes = movimientos
-    .filter(m=>m.tipo==='INGRESO' && m.fechaStr && m.fechaStr.startsWith(mesActual))
-    .reduce((s,m)=>s+m.monto,0);
-  document.getElementById('kpiVentas').textContent = '$'+ventasMes.toLocaleString('es-UY');
+  const mesActual  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const d2 = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const mesAnterior = `${d2.getFullYear()}-${String(d2.getMonth()+1).padStart(2,'0')}`;
 
-  // Últimos 6 meses
+  const ingMes  = movimientos.filter(m=>m.tipo==='INGRESO'&&m.fechaStr&&m.fechaStr.startsWith(mesActual)).reduce((s,m)=>s+m.monto,0);
+  const ingAnt  = movimientos.filter(m=>m.tipo==='INGRESO'&&m.fechaStr&&m.fechaStr.startsWith(mesAnterior)).reduce((s,m)=>s+m.monto,0);
+  const gastMes = movimientos.filter(m=>m.tipo==='GASTO'&&m.fechaStr&&m.fechaStr.startsWith(mesActual)).reduce((s,m)=>s+m.monto,0);
+  const neta    = ingMes - gastMes;
+
+  document.getElementById('kpiVentas').textContent = '$'+ingMes.toLocaleString('es-UY');
+  document.getElementById('kpiNeta').textContent   = '$'+neta.toLocaleString('es-UY');
+  const pedMes = pedidos.filter(p=>p.fechaStr&&p.fechaStr.startsWith(mesActual)).length;
+  if(document.getElementById('kpiPedMes'))  document.getElementById('kpiPedMes').textContent  = pedidos.filter(p=>p.fechaStr&&p.fechaStr.startsWith(mesActual)).length;
+  if(document.getElementById('kpiGastMes')) document.getElementById('kpiGastMes').textContent = '$'+gastMes.toLocaleString('es-UY');
+
+  // Variación vs mes anterior
+  const variacion = ingAnt > 0 ? Math.round(((ingMes-ingAnt)/ingAnt)*100) : null;
+  const varEl = document.getElementById('kpiVentasSub');
+  if(variacion !== null) {
+    const arrow = variacion >= 0 ? '▲' : '▼';
+    const color = variacion >= 0 ? 'var(--green)' : 'var(--red)';
+    varEl.innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(variacion)}% vs mes anterior</span>`;
+  } else { varEl.textContent = 'Sin datos del mes anterior'; }
+
+  // Gráfico barras últimos 6 meses
   const meses = [];
   for(let i=5;i>=0;i--){
     const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    meses.push({
-      lbl:d.toLocaleDateString('es-UY',{month:'short'}),
-      key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`
-    });
+    meses.push({ lbl:d.toLocaleDateString('es-UY',{month:'short'}), key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` });
   }
-  const ventasPorMes = meses.map(m=>({
-    lbl:m.lbl,
-    val:movimientos.filter(x=>x.tipo==='INGRESO'&&x.fechaStr&&x.fechaStr.startsWith(m.key)).reduce((s,x)=>s+x.monto,0)
-  }));
+  const ventasPorMes = meses.map(m=>({ lbl:m.lbl, val:movimientos.filter(x=>x.tipo==='INGRESO'&&x.fechaStr&&x.fechaStr.startsWith(m.key)).reduce((s,x)=>s+x.monto,0) }));
   const maxV = Math.max(...ventasPorMes.map(x=>x.val),1);
   document.getElementById('barChart').innerHTML = ventasPorMes.map((m,i)=>{
     const pct = Math.round((m.val/maxV)*100)||2;
@@ -684,22 +794,86 @@ function renderDash() {
     </div>`;
   }).join('');
 
+  // Productos más vendidos (por pedidos del mes)
+  const vendidos = {};
+  pedidos.filter(p=>p.fechaStr&&p.fechaStr.startsWith(mesActual)).forEach(p=>{
+    (p.items||[]).forEach(item=>{ vendidos[item.name]=(vendidos[item.name]||0)+1; });
+  });
+  const topProds = Object.entries(vendidos).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxVend = topProds[0]?.[1]||1;
+  document.getElementById('topProductos').innerHTML = topProds.length
+    ? topProds.map(([name,cnt])=>`
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;font-size:11px;color:var(--g6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
+          <div style="flex:2;height:4px;background:var(--g2);border-radius:2px">
+            <div style="width:${Math.round(cnt/maxVend*100)}%;height:100%;background:var(--g6);border-radius:2px"></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--g5);min-width:20px;text-align:right">${cnt}</div>
+        </div>`).join('')
+    : '<span style="font-size:11px;color:var(--g4);font-family:\'Space Mono\',monospace">Sin ventas este mes</span>';
+
+  // Alertas stock bajo
+  const bajos = productos.filter(p=>{
+    const t=(p.s||0)+(p.m||0)+(p.l||0)+(p.xl||0); return t<5;
+  });
+  document.getElementById('alertasStock').innerHTML = bajos.length
+    ? bajos.map(p=>{
+        const t=(p.s||0)+(p.m||0)+(p.l||0)+(p.xl||0);
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--g2)">
+          <span style="font-size:11px;color:var(--g6)">${p.nombre}</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:${t===0?'var(--red)':'var(--yellow)'}">${t===0?'AGOTADO':t+' ud.'}</span>
+        </div>`;}).join('')
+    : '<span style="font-size:11px;color:var(--green);font-family:\'Space Mono\',monospace">✓ Todo en stock</span>';
+
   // Pie por categoría
   const cats = ['remeras','buzos','pantalones','accesorios'];
   const catColors = ['#d8d8d4','#888','#444','#2c2c2c'];
   const catTotales = cats.map(c=>productos.filter(p=>p.cat===c).length);
-  const total = catTotales.reduce((a,b)=>a+b,0)||1;
+  const totalProds = catTotales.reduce((a,b)=>a+b,0)||1;
   document.getElementById('pieList').innerHTML = cats.map((c,i)=>
     `<div class="pie-row">
       <div class="pie-dot" style="background:${catColors[i]}"></div>
       <div class="pie-name" style="text-transform:capitalize">${c}</div>
-      <div class="pie-pct">${Math.round(catTotales[i]/total*100)}%</div>
-    </div>`
-  ).join('');
+      <div class="pie-pct">${Math.round(catTotales[i]/totalProds*100)}%</div>
+    </div>`).join('');
+
+  // Margen promedio por categoría
+  const margenPorCat = cats.map(c=>{
+    const prods = productos.filter(p=>p.cat===c&&p.costo>0&&p.precio>0);
+    if(!prods.length) return {cat:c, margen:null};
+    const avg = Math.round(prods.reduce((s,p)=>s+((p.precio-p.costo)/p.precio*100),0)/prods.length);
+    return {cat:c, margen:avg};
+  }).filter(x=>x.margen!==null);
+  document.getElementById('margenStats').innerHTML = margenPorCat.length
+    ? margenPorCat.map(x=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--g2)">
+          <span style="font-size:11px;color:var(--g5);text-transform:capitalize">${x.cat}</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:${x.margen>=50?'var(--green)':x.margen>=30?'var(--yellow)':'var(--red)'}">${x.margen}%</span>
+        </div>`).join('')
+    : '<span style="font-size:11px;color:var(--g4);font-family:\'Space Mono\',monospace">Agregá costos a los productos</span>';
+
+  // Resumen del mes
+  const pedMesCount = pedidos.filter(p=>p.fechaStr&&p.fechaStr.startsWith(mesActual)).length;
+  const pedPend = pedidos.filter(p=>p.estado==='PENDIENTE').length;
+  document.getElementById('resumenMes').innerHTML = [
+    {lbl:'Pedidos del mes', val:pedMesCount},
+    {lbl:'Pendientes', val:pedPend},
+    {lbl:'Ingresos', val:'$'+ingMes.toLocaleString('es-UY')},
+    {lbl:'Gastos', val:'$'+gastMes.toLocaleString('es-UY')},
+    {lbl:'Ganancia', val:'$'+neta.toLocaleString('es-UY')},
+  ].map(r=>`
+    <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--g2)">
+      <span style="font-size:11px;color:var(--g5)">${r.lbl}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--g7)">${r.val}</span>
+    </div>`).join('');
 
   // Últimos 5 pedidos
   document.getElementById('dashPedTbl').innerHTML = pedidos.slice(0,5).map(p=>pedidoFila(p)).join('') ||
     '<tr><td colspan="6" class="loading">Sin pedidos aún</td></tr>';
+
+  // KPIs sidebar
+  document.getElementById('kpiProds').textContent = productos.length;
+  document.getElementById('kpiBajo').textContent  = bajos.length;
 }
 
 // ─────────────────────────────────────────────
@@ -898,6 +1072,13 @@ window.crearUsuario = async () => {
 // ─────────────────────────────────────────────
 // EXCEL IMPORT / EXPORT
 // ─────────────────────────────────────────────
+window.switchDashTab = function(tab) {
+  document.getElementById('dashOp').style.display  = tab==='op'  ? 'block' : 'none';
+  document.getElementById('dashMet').style.display = tab==='met' ? 'block' : 'none';
+  document.getElementById('tabOp').classList.toggle('act',  tab==='op');
+  document.getElementById('tabMet').classList.toggle('act', tab==='met');
+};
+
 window.exportarExcel = function() {
   if(!productos.length){ toast('No hay productos para exportar',true); return; }
   const rows = [['nombre','categoria','precio','costo','s','m','l','xl','colores','badge']];
