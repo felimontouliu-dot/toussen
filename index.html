@@ -133,30 +133,61 @@
   .sz { width:20px; height:20px; border:1px solid var(--g7); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:7px; color:var(--g7); }
   .sz.av { border-color:var(--g5); color:var(--g5); }
 
-  /* Virtual try-on — dark again */
+  /* Asesor de talles — dark again */
   .vto { padding:88px 52px; background:var(--g1); color:var(--g8); position:relative; overflow:hidden; }
   .vto::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--g4),transparent); }
   .vto::after  { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--g3),transparent); }
   .vto-bg-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:300px; color:transparent; -webkit-text-stroke:1px var(--g2); white-space:nowrap; line-height:1; pointer-events:none; }
-  .vto-inner { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:88px; align-items:center; max-width:1100px; margin:0 auto; }
+  .vto-inner { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:88px; align-items:start; max-width:1100px; margin:0 auto; }
   .vto-tag { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--g5); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
   .vto-tag::before { content:''; width:24px; height:1px; background:var(--g4); display:inline-block; }
   .vto-h2 { font-family:'Bebas Neue',sans-serif; font-size:72px; line-height:.9; margin-bottom:24px; color:var(--g8); }
   .vto-h2 em { color:var(--g6); font-style:normal; }
   .vto-p { font-size:13px; color:var(--g5); line-height:1.85; max-width:360px; margin-bottom:36px; }
-  .steps { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; }
-  .step { display:flex; align-items:center; gap:16px; }
-  .step-n { width:30px; height:30px; border:1px solid var(--g3); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; color:var(--g5); flex-shrink:0; }
-  .step-t { font-size:13px; color:var(--g4); }
-  .vto-widget { background:var(--g0); border:1px solid var(--g2); padding:36px; }
-  .upload-z { border:1px dashed var(--g3); padding:44px 28px; text-align:center; margin-bottom:20px; transition:border-color .2s; cursor:none; }
-  .upload-z:hover { border-color:var(--g5); }
-  .upload-z .ico { font-size:26px; display:block; margin-bottom:10px; opacity:.3; }
-  .upload-z .ut { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--g4); margin-bottom:6px; }
-  .upload-z .us { font-size:11px; color:var(--g3); }
-  .vto-sel { width:100%; background:var(--g1); border:1px solid var(--g2); color:var(--g6); font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.08em; padding:11px 14px; margin-bottom:14px; appearance:none; cursor:none; }
-  .vto-btn { width:100%; background:var(--g8); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:13px; border:none; cursor:none; transition:background .2s; }
-  .vto-btn:hover { background:var(--g9); }
+  .vto-steps { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; }
+  .vto-step { display:flex; align-items:center; gap:16px; }
+  .vto-step-n { width:30px; height:30px; border:1px solid var(--g3); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; color:var(--g5); flex-shrink:0; }
+  .vto-step-t { font-size:13px; color:var(--g4); }
+
+  /* Widget asesor */
+  .asesor-widget { background:var(--g0); border:1px solid var(--g2); padding:32px; }
+  .asesor-step { display:none; }
+  .asesor-step.active { display:block; }
+  .asesor-tipo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:24px; }
+  .asesor-tipo { border:1px solid var(--g3); padding:12px 8px; cursor:none; text-align:center; transition:all .2s; background:transparent; }
+  .asesor-tipo:hover { border-color:var(--g5); }
+  .asesor-tipo.sel { border-color:var(--g7); background:var(--g1); }
+  .asesor-tipo-ico { font-size:20px; display:block; margin-bottom:6px; opacity:.6; }
+  .asesor-tipo-lbl { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g5); }
+  .asesor-tipo.sel .asesor-tipo-lbl { color:var(--g7); }
+  .asesor-inputs { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .asesor-inp-wrap label { display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--g5); margin-bottom:8px; }
+  .asesor-inp-wrap input { width:100%; padding:11px 12px; border:1px solid var(--g2); background:var(--g1); color:var(--g8); font-family:'Space Mono',monospace; font-size:13px; outline:none; transition:border .2s; }
+  .asesor-inp-wrap input:focus { border-color:var(--g5); }
+  .asesor-inp-hint { font-size:10px; color:var(--g4); margin-top:4px; }
+  .asesor-cta { width:100%; background:var(--g8); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:13px; border:none; cursor:none; transition:background .2s; }
+  .asesor-cta:hover { background:var(--g9); }
+  .asesor-back { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g4); cursor:none; margin-bottom:20px; display:inline-block; border:none; background:none; transition:color .2s; padding:0; }
+  .asesor-back:hover { color:var(--g7); }
+  .asesor-bubble { background:var(--g2); border-left:2px solid var(--g6); padding:16px 18px; margin-bottom:20px; font-size:12px; color:var(--g7); line-height:1.8; }
+  .asesor-bubble-tag { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.18em; text-transform:uppercase; color:var(--g5); margin-bottom:6px; }
+  .asesor-sec-label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--g4); margin:16px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--g2); }
+  .asesor-cards { display:flex; flex-direction:column; gap:8px; }
+  .asesor-card { border:1px solid var(--g2); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; transition:border-color .2s; }
+  .asesor-card.highlight { border-color:var(--g6); background:var(--g1); }
+  .asesor-card-l { display:flex; flex-direction:column; gap:3px; }
+  .asesor-fit-badge { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; padding:2px 7px; display:inline-block; }
+  .badge-slim    { background:#1a2e1a; color:#6aad6a; }
+  .badge-regular { background:#1a1f2e; color:#6a8aad; }
+  .badge-oversize{ background:#2e1a1a; color:#ad6a6a; }
+  .asesor-card-talle { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--g8); letter-spacing:.06em; }
+  .asesor-card-precio { font-family:'Space Mono',monospace; font-size:10px; color:var(--g5); }
+  .asesor-add-btn { font-family:'Space Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:8px 14px; border:1px solid var(--g3); background:transparent; color:var(--g6); cursor:none; transition:all .2s; white-space:nowrap; }
+  .asesor-add-btn:hover { border-color:var(--g7); color:var(--g8); }
+  .asesor-outfit-strip { display:flex; flex-direction:column; gap:6px; }
+  .asesor-outfit-chip { border:1px solid var(--g2); padding:8px 12px; display:flex; justify-content:space-between; align-items:center; }
+  .asesor-outfit-chip-l { font-size:12px; color:var(--g6); }
+  .asesor-outfit-chip-r { font-family:'Space Mono',monospace; font-size:8px; color:var(--g4); letter-spacing:.1em; text-transform:uppercase; }
 
   /* Banner — light */
   .banner { background:var(--g8); border-top:1px solid var(--g7); border-bottom:1px solid var(--g7); padding:56px 52px; display:flex; align-items:center; justify-content:space-between; gap:40px; }
@@ -410,35 +441,66 @@
     </div>
   </section>
 
-  <!-- Probador virtual -->
+  <!-- Asesor de talles -->
   <section class="vto" id="vto">
-    <div class="vto-bg-text">PROBATE</div>
+    <div class="vto-bg-text">TALLE</div>
     <div class="vto-inner">
       <div class="vto-txt">
-        <div class="vto-tag">Exclusivo Toussen</div>
-        <h2 class="vto-h2">PROBADOR<br><em>VIRTUAL</em></h2>
-        <p class="vto-p">Subí una foto y mirá cómo te queda la prenda antes de comprar. Tecnología única en Uruguay.</p>
-        <div class="steps">
-          <div class="step"><div class="step-n">01</div><div class="step-t">Subís una foto tuya de frente</div></div>
-          <div class="step"><div class="step-n">02</div><div class="step-t">Elegís la prenda que te interesa</div></div>
-          <div class="step"><div class="step-n">03</div><div class="step-t">Ves cómo te queda antes de comprar</div></div>
+        <div class="vto-tag">Asesor de estilo</div>
+        <h2 class="vto-h2">ENCONTRÁ<br><em>TU TALLE</em></h2>
+        <p class="vto-p">Medí una prenda que te quede como querés y te recomendamos tu talle Toussen y el look completo.</p>
+        <div class="vto-steps">
+          <div class="vto-step"><div class="vto-step-n">01</div><div class="vto-step-t">Elegís el tipo de prenda</div></div>
+          <div class="vto-step"><div class="vto-step-n">02</div><div class="vto-step-t">Ingresás ancho y largo de una prenda que te quede bien</div></div>
+          <div class="vto-step"><div class="vto-step-n">03</div><div class="vto-step-t">Te recomendamos talle y outfit completo</div></div>
         </div>
-        <a href="#" class="btn-light" style="display:inline-block">Probar ahora →</a>
       </div>
-      <div class="vto-widget">
-        <div class="upload-z">
-          <span class="ico">📷</span>
-          <div class="ut">Subí tu foto</div>
-          <div class="us">JPG o PNG · Máx. 10MB</div>
+      <div class="asesor-widget">
+
+        <!-- Paso 1: Input -->
+        <div class="asesor-step active" id="aStep1">
+          <div class="asesor-tipo-grid">
+            <button class="asesor-tipo sel" onclick="aSelTipo(this,'remera')">
+              <span class="asesor-tipo-ico">👕</span>
+              <span class="asesor-tipo-lbl">Remera</span>
+            </button>
+            <button class="asesor-tipo" onclick="aSelTipo(this,'buzo')">
+              <span class="asesor-tipo-ico">🧥</span>
+              <span class="asesor-tipo-lbl">Buzo</span>
+            </button>
+            <button class="asesor-tipo" onclick="aSelTipo(this,'hoodie')">
+              <span class="asesor-tipo-ico">🧣</span>
+              <span class="asesor-tipo-lbl">Hoodie</span>
+            </button>
+          </div>
+          <div class="asesor-inputs">
+            <div class="asesor-inp-wrap">
+              <label>Ancho (cm)</label>
+              <input type="number" id="aAncho" placeholder="52" min="30" max="80">
+              <p class="asesor-inp-hint">De axila a axila</p>
+            </div>
+            <div class="asesor-inp-wrap">
+              <label>Largo (cm)</label>
+              <input type="number" id="aLargo" placeholder="70" min="40" max="90">
+              <p class="asesor-inp-hint">De cuello a borde</p>
+            </div>
+          </div>
+          <button class="asesor-cta" onclick="aCalcular()">ENCONTRAR MI TALLE →</button>
         </div>
-        <select class="vto-sel">
-          <option>Seleccioná una prenda...</option>
-          <option>Remera Oversized — $1.200</option>
-          <option>Buzo Hoodie — $2.400</option>
-          <option>Cargo Pants — $3.100</option>
-          <option>Crewneck Heavy — $2.200</option>
-        </select>
-        <button class="vto-btn">GENERAR PRUEBA →</button>
+
+        <!-- Paso 2: Resultado -->
+        <div class="asesor-step" id="aStep2">
+          <button class="asesor-back" onclick="aVolver()">← Volver</button>
+          <div class="asesor-bubble">
+            <div class="asesor-bubble-tag">Asesor Toussen</div>
+            <div id="aBubbleText"></div>
+          </div>
+          <div class="asesor-sec-label">Opciones para vos</div>
+          <div class="asesor-cards" id="aCards"></div>
+          <div class="asesor-sec-label">Completá el look</div>
+          <div class="asesor-outfit-strip" id="aOutfits"></div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -596,10 +658,98 @@ window.filt = function(btn, cat) {
   });
 };
 
-// ── Probador virtual ──
+// ── Asesor de talles ──
 window.goProbador = function() {
   closeCart();
   document.getElementById('vto').scrollIntoView({behavior:'smooth'});
+};
+
+const ASESOR_DB = {
+  remera: [
+    {talle:'S',  ancho:[42,47], largo:[62,67], precio:'$890'},
+    {talle:'M',  ancho:[47,52], largo:[67,72], precio:'$890'},
+    {talle:'L',  ancho:[52,57], largo:[72,77], precio:'$890'},
+    {talle:'XL', ancho:[57,63], largo:[77,82], precio:'$890'},
+  ],
+  buzo: [
+    {talle:'S',  ancho:[46,51], largo:[64,69], precio:'$1.490'},
+    {talle:'M',  ancho:[51,56], largo:[69,74], precio:'$1.490'},
+    {talle:'L',  ancho:[56,61], largo:[74,79], precio:'$1.490'},
+    {talle:'XL', ancho:[61,67], largo:[79,84], precio:'$1.490'},
+  ],
+  hoodie: [
+    {talle:'S',  ancho:[47,52], largo:[64,69], precio:'$1.890'},
+    {talle:'M',  ancho:[52,57], largo:[69,74], precio:'$1.890'},
+    {talle:'L',  ancho:[57,62], largo:[74,79], precio:'$1.890'},
+    {talle:'XL', ancho:[62,68], largo:[79,84], precio:'$1.890'},
+  ],
+};
+
+const ASESOR_OUTFITS = {
+  remera:  [{nombre:'Hoodie',detalle:'Layering urbano'},{nombre:'Buzo oversize',detalle:'Look relajado'},{nombre:'Cargo pants',detalle:'Estilo street'}],
+  buzo:    [{nombre:'Remera interior',detalle:'Layering'},{nombre:'Jogger',detalle:'Set coordinado'},{nombre:'Hoodie',detalle:'Triple capa'}],
+  hoodie:  [{nombre:'Remera',detalle:'Interior'},{nombre:'Cargo pants',detalle:'Street completo'},{nombre:'Buzo',detalle:'Doble capa'}],
+};
+
+let aTipo = 'remera';
+
+window.aSelTipo = function(el, t) {
+  aTipo = t;
+  document.querySelectorAll('.asesor-tipo').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+};
+
+window.aCalcular = function() {
+  const a = parseFloat(document.getElementById('aAncho').value);
+  const l = parseFloat(document.getElementById('aLargo').value);
+  if (!a || !l) { alert('Ingresá ancho y largo.'); return; }
+
+  const data = ASESOR_DB[aTipo];
+  let regular = data[0], minDist = Infinity;
+  data.forEach(t => {
+    const ca = (t.ancho[0]+t.ancho[1])/2;
+    const cl = (t.largo[0]+t.largo[1])/2;
+    const d  = Math.abs(a-ca) + Math.abs(l-cl);
+    if (d < minDist) { minDist = d; regular = t; }
+  });
+
+  const ri = data.indexOf(regular);
+  const slim     = ri > 0              ? data[ri-1] : null;
+  const oversize = ri < data.length-1  ? data[ri+1] : null;
+
+  let txt = `Con ancho <strong>${a} cm</strong> y largo <strong>${l} cm</strong>, tu talle base en ${aTipo} es <strong>${regular.talle}</strong>.`;
+  if (slim)     txt += ` El <strong>${slim.talle}</strong> te va a quedar más ajustado (slim fit).`;
+  if (oversize) txt += ` El <strong>${oversize.talle}</strong> te da un look más oversize.`;
+  document.getElementById('aBubbleText').innerHTML = txt;
+
+  const opciones = [];
+  if (slim)     opciones.push({...slim, fit:'slim',    label:'Slim fit'});
+                opciones.push({...regular, fit:'regular', label:'Regular'});
+  if (oversize) opciones.push({...oversize, fit:'oversize', label:'Oversize'});
+
+  document.getElementById('aCards').innerHTML = opciones.map(op => `
+    <div class="asesor-card${op.fit==='regular'?' highlight':''}">
+      <div class="asesor-card-l">
+        <span class="asesor-fit-badge badge-${op.fit}">${op.label}</span>
+        <span class="asesor-card-talle">Talle ${op.talle}</span>
+        <span class="asesor-card-precio">${op.precio}</span>
+      </div>
+      <button class="asesor-add-btn" onclick="add('${aTipo.charAt(0).toUpperCase()+aTipo.slice(1)} Toussen',${parseInt(op.precio.replace(/\D/g,''))},'${op.talle}')">+ Agregar</button>
+    </div>`).join('');
+
+  document.getElementById('aOutfits').innerHTML = (ASESOR_OUTFITS[aTipo]||[]).map(o => `
+    <div class="asesor-outfit-chip">
+      <span class="asesor-outfit-chip-l">${o.nombre}</span>
+      <span class="asesor-outfit-chip-r">${o.detalle}</span>
+    </div>`).join('');
+
+  document.getElementById('aStep1').classList.remove('active');
+  document.getElementById('aStep2').classList.add('active');
+};
+
+window.aVolver = function() {
+  document.getElementById('aStep2').classList.remove('active');
+  document.getElementById('aStep1').classList.add('active');
 };
 
 // ── Cargar productos desde Firestore ──
