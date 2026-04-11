@@ -242,6 +242,32 @@
   .fi { opacity:0; animation:fadeUp .7s ease forwards; }
   .d1{animation-delay:.1s} .d2{animation-delay:.22s} .d3{animation-delay:.34s} .d4{animation-delay:.46s}
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Checkout modal */
+  .chk-panel { position:fixed; top:0; right:-520px; width:480px; height:100vh; background:var(--g9); border-left:1px solid var(--g7); z-index:1002; transition:right .3s cubic-bezier(.25,.46,.45,.94); display:flex; flex-direction:column; color:var(--g0); }
+  .chk-panel.on { right:0; }
+  .chk-hd { padding:24px 28px; border-bottom:1px solid var(--g7); display:flex; align-items:center; justify-content:space-between; }
+  .chk-hd h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:.08em; }
+  .chk-body { flex:1; overflow-y:auto; padding:28px; }
+  .chk-label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.18em; text-transform:uppercase; color:var(--g5); margin-bottom:6px; display:block; }
+  .chk-input { width:100%; padding:12px 14px; border:1px solid var(--g7); background:#fff; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--g0); outline:none; margin-bottom:16px; transition:border-color .2s; }
+  .chk-input:focus { border-color:var(--g0); }
+  .chk-resumen { background:var(--g8); padding:16px; margin-bottom:24px; }
+  .chk-resumen-title { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--g5); margin-bottom:12px; }
+  .chk-resumen-item { display:flex; justify-content:space-between; font-size:12px; color:var(--g0); padding:4px 0; border-bottom:1px solid var(--g7); }
+  .chk-resumen-total { display:flex; justify-content:space-between; margin-top:10px; }
+  .chk-resumen-total span:first-child { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g5); }
+  .chk-resumen-total span:last-child { font-family:'Bebas Neue',sans-serif; font-size:24px; }
+  .chk-divider { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--g5); text-align:center; margin:20px 0; position:relative; }
+  .chk-divider::before { content:''; position:absolute; top:50%; left:0; right:0; height:1px; background:var(--g7); }
+  .chk-divider span { background:var(--g9); padding:0 12px; position:relative; }
+  .btn-mp { width:100%; padding:15px; background:#009ee3; color:#fff; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; margin-bottom:10px; transition:background .2s; display:flex; align-items:center; justify-content:center; gap:10px; }
+  .btn-mp:hover { background:#0088cc; }
+  .btn-mp:disabled { background:#ccc; cursor:not-allowed; }
+  .btn-wa { width:100%; padding:15px; background:#25d366; color:#fff; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; transition:background .2s; display:flex; align-items:center; justify-content:center; gap:10px; }
+  .btn-wa:hover { background:#1da851; }
+  .chk-mp-note { font-size:10px; color:var(--g5); text-align:center; margin-top:8px; line-height:1.6; }
+  #ovlChk { z-index:1001; }
 </style>
 </head>
 <body>
@@ -557,8 +583,57 @@
   </div>
   <div class="cart-ft">
     <div class="c-tot"><span class="c-tot-l">Total</span><span class="c-tot-a" id="tot">$0</span></div>
-    <button class="chk" onclick="checkout()">HACER PEDIDO →</button>
-    <p class="c-note">Sin pago online · Te contactamos para coordinar</p>
+    <button class="chk" onclick="openCheckout()">CONTINUAR →</button>
+    <p class="c-note">Pagá con Mercado Pago o transferencia bancaria</p>
+  </div>
+</div>
+
+<!-- ── OVERLAY CHECKOUT ── -->
+<div class="ovl" id="ovlChk" onclick="closeCheckout()"></div>
+
+<!-- ── PANEL CHECKOUT ── -->
+<div class="chk-panel" id="chkPanel">
+  <div class="chk-hd">
+    <h3>FINALIZAR PEDIDO</h3>
+    <button class="close-c" onclick="closeCheckout()">✕</button>
+  </div>
+  <div class="chk-body">
+
+    <!-- Resumen -->
+    <div class="chk-resumen">
+      <div class="chk-resumen-title">Tu pedido</div>
+      <div id="chkItems"></div>
+      <div class="chk-resumen-total">
+        <span>Total</span>
+        <span id="chkTotal">$0</span>
+      </div>
+    </div>
+
+    <!-- Datos del cliente -->
+    <label class="chk-label">Nombre completo</label>
+    <input class="chk-input" id="chkNombre" placeholder="Tu nombre y apellido" type="text">
+
+    <label class="chk-label">Email</label>
+    <input class="chk-input" id="chkEmail" placeholder="tu@email.com" type="email">
+
+    <label class="chk-label">WhatsApp (ej: 091234567)</label>
+    <input class="chk-input" id="chkTel" placeholder="09XXXXXXX" type="tel">
+
+    <!-- Opciones de pago -->
+    <div class="chk-divider"><span>Elegí cómo pagar</span></div>
+
+    <button class="btn-mp" id="btnMP" onclick="pagarMP()">
+      <span>💳</span> Pagar con Mercado Pago
+    </button>
+    <p class="chk-mp-note">Tarjeta de débito, crédito o saldo MP</p>
+
+    <div style="height:12px"></div>
+
+    <button class="btn-wa" onclick="pagarTransferencia()">
+      <span>📲</span> Pagar por transferencia
+    </button>
+    <p class="chk-mp-note">Te enviamos los datos bancarios por WhatsApp</p>
+
   </div>
 </div>
 
@@ -623,31 +698,135 @@ function showToast() {
   setTimeout(()=>t.classList.remove('on'),2500); openCart();
 }
 
-// ── Checkout → guarda pedido en Firestore ──
-window.checkout = async function() {
+// ── Mercado Pago access token ──
+// ← PEGAR ACÁ EL ACCESS TOKEN DE MP CUANDO CHRISTIAN TENGA LA CUENTA VERIFICADA
+const MP_ACCESS_TOKEN = '';
+
+// ── Checkout ──
+window.openCheckout = function() {
   if(!cart.length) return;
-  const nombre = prompt('¿Cuál es tu nombre completo?');
-  if(!nombre) return;
-  const tel = prompt('¿Tu número de WhatsApp (sin 0, ej: 9XXXXXXX)?');
-  if(!tel) return;
+  closeCart();
   const total = cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('chkItems').innerHTML = cart.map(i=>
+    `<div class="chk-resumen-item"><span>${i.name} (${i.talle})</span><span>$${i.price.toLocaleString('es-UY')}</span></div>`
+  ).join('');
+  document.getElementById('chkTotal').textContent = '$'+total.toLocaleString('es-UY');
+  document.getElementById('chkPanel').classList.add('on');
+  document.getElementById('ovlChk').classList.add('on');
+};
+
+window.closeCheckout = function() {
+  document.getElementById('chkPanel').classList.remove('on');
+  document.getElementById('ovlChk').classList.remove('on');
+};
+
+function getDatosCliente() {
+  const nombre = document.getElementById('chkNombre').value.trim();
+  const email  = document.getElementById('chkEmail').value.trim();
+  const tel    = document.getElementById('chkTel').value.trim();
+  if(!nombre || !email || !tel) { alert('Por favor completá todos tus datos.'); return null; }
+  return { nombre, email, tel };
+}
+
+async function guardarPedido(metodoPago) {
+  const datos   = getDatosCliente();
+  if(!datos) return null;
+  const total   = cart.reduce((s,i)=>s+i.price,0);
   const detalle = cart.map(i=>`${i.name} (${i.talle})`).join(', ');
   const now = new Date();
   const fechaStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   try {
     await addDoc(collection(db,'pedidos'),{
-      nombre, telefono:tel, detalle, total,
+      nombre:datos.nombre, email:datos.email, telefono:datos.tel,
+      detalle, total, metodoPago,
       estado:'PENDIENTE', fecha:serverTimestamp(), fechaStr,
       items: cart.map(i=>({name:i.name,price:i.price,talle:i.talle}))
     });
-    // Abrir WhatsApp
-    const msg = `Hola Toussen! 👋\nQuiero hacer un pedido:\n\n${detalle}\n\nTotal: $${total.toLocaleString('es-UY')}\n\nNombre: ${nombre}`;
-    window.open(`https://wa.me/598XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
-    cart=[];updateCart();closeCart();
-    alert('¡Pedido registrado! Te redirigimos a WhatsApp para coordinar la entrega 🎉');
+    return { datos, total, detalle };
   } catch(e) {
     alert('Hubo un error al registrar el pedido. Intentá de nuevo.');
+    return null;
   }
+}
+
+// ── Pagar con Mercado Pago ──
+window.pagarMP = async function() {
+  const datos = getDatosCliente();
+  if(!datos) return;
+
+  if(!MP_ACCESS_TOKEN) {
+    alert('El pago con Mercado Pago estará disponible próximamente. Por ahora usá transferencia bancaria.');
+    return;
+  }
+
+  const btn = document.getElementById('btnMP');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Procesando...';
+
+  try {
+    const items = cart.map(i=>({ title:i.name, quantity:1, unit_price:i.price, currency_id:'UYU' }));
+    const res = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${MP_ACCESS_TOKEN}` },
+      body: JSON.stringify({
+        items,
+        payer:{ name:datos.nombre, email:datos.email },
+        back_urls:{
+          success: window.location.origin+'/index.html?pago=ok',
+          failure: window.location.origin+'/index.html?pago=error',
+          pending: window.location.origin+'/index.html?pago=pendiente'
+        },
+        auto_return:'approved',
+        external_reference: datos.email+'_'+Date.now()
+      })
+    });
+    const pref = await res.json();
+    if(pref.init_point) {
+      await guardarPedido('MERCADO_PAGO');
+      cart=[]; updateCart(); closeCheckout();
+      window.location.href = pref.init_point;
+    } else { throw new Error(); }
+  } catch(e) {
+    alert('Error al conectar con Mercado Pago. Intentá con transferencia bancaria.');
+    btn.disabled = false;
+    btn.innerHTML = '<span>💳</span> Pagar con Mercado Pago';
+  }
+};
+
+// ── Pagar por transferencia bancaria ──
+window.pagarTransferencia = async function() {
+  const resultado = await guardarPedido('TRANSFERENCIA');
+  if(!resultado) return;
+  const { datos, total, detalle } = resultado;
+
+  // ─ COMPLETAR CON LOS DATOS BANCARIOS DE TOUSSEN ─
+  const banco   = 'BANCO_PLACEHOLDER';
+  const titular = 'TITULAR_PLACEHOLDER';
+  const cuenta  = 'CUENTA_PLACEHOLDER';
+  const rut     = 'RUT_PLACEHOLDER';
+
+  const msg = `Hola Toussen! 👋
+Quiero pagar mi pedido por transferencia.
+
+*Pedido:*
+${detalle}
+
+*Total: $${total.toLocaleString('es-UY')}*
+
+*Mis datos:*
+Nombre: ${datos.nombre}
+Email: ${datos.email}
+
+*Datos bancarios Toussen:*
+Banco: ${banco}
+Titular: ${titular}
+Cuenta: ${cuenta}
+RUT: ${rut}
+
+Avísame cuando hagas la transferencia 🙏`;
+
+  cart=[]; updateCart(); closeCheckout();
+  window.open(`https://wa.me/598XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
 // ── Filtros ──
