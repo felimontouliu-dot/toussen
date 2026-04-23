@@ -1363,7 +1363,10 @@ function renderDetalle(p) {
             <div class="asesor-bubble-tag">Asesor Toussen</div>
             <div id="detABubble"></div>
           </div>
+          <div class="asesor-sec-label">Opciones para vos</div>
           <div class="asesor-cards" id="detACards"></div>
+          <div class="asesor-sec-label" style="margin-top:16px">Completá el look</div>
+          <div class="asesor-outfit-strip" id="detAOutfits"></div>
         </div>
       </div>
     </div>`;
@@ -1469,6 +1472,11 @@ window.detACalcular = function() {
         <span class="asesor-card-talle">Talle ${op.talle}</span>
       </div>
       <button class="asesor-add-btn" onclick="selTalleDesdeAsesor('${op.talle}')">Seleccionar</button>
+    </div>`).join('');
+  document.getElementById('detAOutfits').innerHTML = (ASESOR_OUTFITS[tipo]||[]).map(o=>`
+    <div class="asesor-outfit-chip">
+      <span class="asesor-outfit-chip-l">${o.nombre}</span>
+      <span class="asesor-outfit-chip-r">${o.detalle}</span>
     </div>`).join('');
   document.getElementById('detAStep1').classList.remove('active');
   document.getElementById('detAStep2').classList.add('active');
