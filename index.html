@@ -1337,6 +1337,10 @@ function renderDetalle(p) {
       <button class="det-probador-link" onclick="abrirProbadorEnDetalle()">
         👁 No sé mi talle — usar el asesor
       </button>
+
+      <!-- Outfits siempre visibles -->
+      <div class="det-sec" style="margin-top:4px">Completá el look</div>
+      <div class="asesor-outfit-strip" id="detOutfitsFijo"></div>
     </div>
 
     <div class="det-asesor" id="detAsesor" style="display:none">
@@ -1365,11 +1369,18 @@ function renderDetalle(p) {
           </div>
           <div class="asesor-sec-label">Opciones para vos</div>
           <div class="asesor-cards" id="detACards"></div>
-          <div class="asesor-sec-label" style="margin-top:16px">Completá el look</div>
-          <div class="asesor-outfit-strip" id="detAOutfits"></div>
         </div>
       </div>
     </div>`;
+
+  // Llenar outfits fijos según categoría del producto
+  const tipo = (p.cat==='buzos'||p.cat==='hoodies') ? 'buzo' : (p.cat==='pantalones' ? 'remera' : 'remera');
+  const outfits = ASESOR_OUTFITS[tipo] || ASESOR_OUTFITS['remera'];
+  document.getElementById('detOutfitsFijo').innerHTML = outfits.map(o=>`
+    <div class="asesor-outfit-chip">
+      <span class="asesor-outfit-chip-l">${o.nombre}</span>
+      <span class="asesor-outfit-chip-r">${o.detalle}</span>
+    </div>`).join('');
 }
 
 function renderTalleBtns(p, colorSel) {
