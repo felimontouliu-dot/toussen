@@ -133,21 +133,76 @@
   .pimg .ph-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g7); }
   .pbadge { position:absolute; top:10px; left:10px; background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; }
   .pbadge.lt { background:var(--g7); color:var(--g0); }
-  .povl { position:absolute; inset:0; background:rgba(245,244,240,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0; transition:opacity .22s; }
+  .povl { position:absolute; inset:0; background:rgba(245,244,240,.88); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0; transition:opacity .22s; }
   .pcard:hover .povl { opacity:1; }
   .povl-btn { font-family:'Space Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:10px 0; width:148px; border:none; cursor:none; text-align:center; transition:all .15s; }
   .povl-btn.p { background:var(--g0); color:var(--g9); }
   .povl-btn.p:hover { background:var(--g2); }
-  .povl-btn.s { background:transparent; border:1px solid var(--g3); color:var(--g0); }
-  .povl-btn.s:hover { background:var(--g8); }
   .pinfo { padding:14px 16px 18px; border-top:1px solid var(--light-border); }
   .pname { font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px; color:var(--g0); }
   .psub { font-size:12px; color:var(--g5); margin-bottom:10px; }
   .pfoot { display:flex; align-items:center; justify-content:space-between; }
   .pprice { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; color:var(--g0); }
-  .psizes { display:flex; gap:3px; }
-  .sz { width:20px; height:20px; border:1px solid var(--g7); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:7px; color:var(--g7); }
-  .sz.av { border-color:var(--g5); color:var(--g5); }
+  /* Color dots en la card */
+  .pcolors { display:flex; gap:5px; align-items:center; }
+  .pcolor-dot { width:14px; height:14px; border-radius:2px; border:1.5px solid rgba(0,0,0,.12); display:inline-block; }
+
+  /* ── Panel detalle de producto ── */
+  .det-panel { position:fixed; top:0; right:-600px; width:560px; height:100vh; background:var(--g9); border-left:1px solid var(--g7); z-index:1006; transition:right .3s cubic-bezier(.25,.46,.45,.94); display:flex; flex-direction:column; color:var(--g0); }
+  .det-panel.on { right:0; }
+  #ovlDet { z-index:1005; }
+  .det-hd { padding:20px 28px; border-bottom:1px solid var(--g7); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .det-hd-back { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--g5); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; transition:color .2s; }
+  .det-hd-back:hover { color:var(--g0); }
+  .det-body { flex:1; overflow-y:auto; padding:0; }
+  .det-img { aspect-ratio:4/3; background:var(--g8); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; position:relative; }
+  .det-img .ph { font-size:52px; opacity:.15; }
+  .det-img .ph-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g7); }
+  .det-info { padding:24px 28px; }
+  .det-badge-row { margin-bottom:10px; }
+  .det-nombre { font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:.04em; line-height:1; color:var(--g0); margin-bottom:4px; }
+  .det-precio { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.04em; color:var(--g0); margin-bottom:24px; }
+  .det-sec { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--g5); margin-bottom:10px; }
+  /* Selector de color */
+  .det-colores { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
+  .det-color-btn { width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:all .2s; position:relative; }
+  .det-color-btn.sel { border-color:var(--g0); }
+  .det-color-btn::after { content:''; position:absolute; inset:-4px; border-radius:50%; border:1.5px solid transparent; transition:border-color .2s; }
+  .det-color-btn.sel::after { border-color:var(--g0); }
+  .det-color-label { font-size:12px; color:var(--g5); margin-top:6px; margin-bottom:24px; }
+  /* Selector de talle */
+  .det-talles { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .det-talle-btn { width:48px; height:48px; border:1px solid var(--g7); background:transparent; font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:var(--g5); cursor:pointer; transition:all .2s; }
+  .det-talle-btn:hover:not(.agotado) { border-color:var(--g0); color:var(--g0); }
+  .det-talle-btn.sel { border-color:var(--g0); background:var(--g0); color:var(--g9); }
+  .det-talle-btn.agotado { border-color:var(--g8); color:var(--g7); cursor:not-allowed; text-decoration:line-through; }
+  .det-talle-hint { font-size:11px; color:var(--g5); margin-bottom:24px; }
+  /* Botón agregar */
+  .det-add-btn { width:100%; padding:16px; background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; border:none; cursor:pointer; margin-bottom:12px; transition:background .2s; }
+  .det-add-btn:hover:not(:disabled) { background:var(--g2); }
+  .det-add-btn:disabled { background:var(--g7); cursor:not-allowed; }
+  .det-probador-link { width:100%; padding:13px; background:transparent; border:1px solid var(--g7); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-bottom:28px; }
+  .det-probador-link:hover { border-color:var(--g0); }
+  /* Asesor dentro del detalle */
+  .det-asesor { border-top:1px solid var(--g7); padding:24px 28px; background:var(--g8); }
+  .det-asesor-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--g5); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .det-asesor-title::before { content:''; width:16px; height:1px; background:var(--g6); display:inline-block; }
+
+  /* ── Popup stock agotado ── */
+  .stock-popup { position:fixed; inset:0; z-index:1010; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.5); }
+  .stock-popup.on { display:flex; }
+  .stock-popup-box { background:var(--g9); padding:36px; max-width:380px; width:90%; text-align:center; }
+  .stock-popup-ico { font-size:36px; margin-bottom:16px; }
+  .stock-popup-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.04em; color:var(--g0); margin-bottom:8px; }
+  .stock-popup-sub { font-size:13px; color:var(--g5); line-height:1.7; margin-bottom:24px; }
+  .stock-popup-input { width:100%; padding:12px 14px; border:1px solid var(--g7); background:#fff; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--g0); outline:none; margin-bottom:12px; transition:border-color .2s; }
+  .stock-popup-input:focus { border-color:var(--g0); }
+  .stock-popup-btn { width:100%; padding:13px; background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; border:none; cursor:pointer; margin-bottom:10px; transition:background .2s; }
+  .stock-popup-btn:hover { background:var(--g2); }
+  .stock-popup-cancel { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g5); background:none; border:none; cursor:pointer; transition:color .2s; }
+  .stock-popup-cancel:hover { color:var(--g0); }
+  .stock-popup-ok { font-size:12px; color:var(--g5); margin-top:12px; display:none; }
+  .stock-popup-ok.on { display:block; }
 
   /* Asesor de talles */
   .vto { padding:88px 52px; background:var(--g1); color:var(--g8); position:relative; overflow:hidden; }
@@ -471,97 +526,7 @@
       <button class="fb" onclick="filt(this,'accesorios')">Accesorios</button>
     </div>
     <div class="grid" id="grid">
-      <div class="pcard" data-cat="remeras">
-        <div class="pimg"><span class="ph">👕</span><span class="ph-label">Foto producto</span>
-          <span class="pbadge lt">NUEVO</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Remera Oversized',1200)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Remera Oversized</div><div class="psub">Negro / Blanco</div>
-          <div class="pfoot"><div class="pprice">$1.200</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="buzos">
-        <div class="pimg"><span class="ph">🧥</span><span class="ph-label">Foto producto</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Buzo Hoodie',2400)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Buzo Hoodie</div><div class="psub">Gris / Crudo</div>
-          <div class="pfoot"><div class="pprice">$2.400</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz">L</div><div class="sz">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="pantalones">
-        <div class="pimg"><span class="ph">👖</span><span class="ph-label">Foto producto</span>
-          <span class="pbadge">ÚLTIMOS</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Cargo Pants',3100)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Cargo Pants</div><div class="psub">Oliva / Negro</div>
-          <div class="pfoot"><div class="pprice">$3.100</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz">M</div><div class="sz">L</div><div class="sz av">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="remeras">
-        <div class="pimg"><span class="ph">👕</span><span class="ph-label">Foto producto</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Remera Gráfica',1500)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Remera Gráfica</div><div class="psub">Blanco Roto</div>
-          <div class="pfoot"><div class="pprice">$1.500</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz av">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="accesorios">
-        <div class="pimg"><span class="ph">🧢</span><span class="ph-label">Foto producto</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Gorra 6-Panel',800)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Gorra 6-Panel</div><div class="psub">Negro / Blanco</div>
-          <div class="pfoot"><div class="pprice">$800</div>
-          <div class="psizes"><div class="sz av">U</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="buzos">
-        <div class="pimg"><span class="ph">🧥</span><span class="ph-label">Foto producto</span>
-          <span class="pbadge lt">HOT</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Crewneck Heavy',2200)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Crewneck Heavy</div><div class="psub">Negro Vintage</div>
-          <div class="pfoot"><div class="pprice">$2.200</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz av">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="pantalones">
-        <div class="pimg"><span class="ph">👖</span><span class="ph-label">Foto producto</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Jogger Tech',2800)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Jogger Tech</div><div class="psub">Negro / Gris</div>
-          <div class="pfoot"><div class="pprice">$2.800</div>
-          <div class="psizes"><div class="sz av">S</div><div class="sz av">M</div><div class="sz av">L</div><div class="sz">XL</div></div></div></div>
-      </div>
-      <div class="pcard" data-cat="accesorios">
-        <div class="pimg"><span class="ph">🎒</span><span class="ph-label">Foto producto</span>
-          <div class="povl">
-            <button class="povl-btn p" onclick="add('Tote Bag',600)">+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
-          </div>
-        </div>
-        <div class="pinfo"><div class="pname">Tote Bag</div><div class="psub">Natural / Negro</div>
-          <div class="pfoot"><div class="pprice">$600</div>
-          <div class="psizes"><div class="sz av">U</div></div></div></div>
-      </div>
+      <!-- Los productos se cargan dinámicamente desde Firestore -->
     </div>
   </section>
 
@@ -753,6 +718,31 @@
 <!-- ── PANTALLA POST-COMPRA ── -->
 <div class="post-panel" id="postPanel">
   <div id="postContenido"></div>
+</div>
+
+<!-- ── OVERLAY DETALLE ── -->
+<div class="ovl" id="ovlDet" onclick="closeDetalle()"></div>
+
+<!-- ── PANEL DETALLE DE PRODUCTO ── -->
+<div class="det-panel" id="detPanel">
+  <div class="det-hd">
+    <button class="det-hd-back" onclick="closeDetalle()">← Volver a la colección</button>
+    <button class="close-c" onclick="closeDetalle()">✕</button>
+  </div>
+  <div class="det-body" id="detBody"></div>
+</div>
+
+<!-- ── POPUP STOCK AGOTADO ── -->
+<div class="stock-popup" id="stockPopup">
+  <div class="stock-popup-box">
+    <div class="stock-popup-ico">😔</div>
+    <div class="stock-popup-title">STOCK AGOTADO</div>
+    <p class="stock-popup-sub">Este talle está agotado por ahora. ¿Querés que te avisemos cuando vuelva?</p>
+    <input class="stock-popup-input" id="alertaEmail" placeholder="tu@email.com" type="email">
+    <button class="stock-popup-btn" onclick="registrarAlerta()">SÍ, AVISAME →</button>
+    <button class="stock-popup-cancel" onclick="closeStockPopup()">No, gracias</button>
+    <p class="stock-popup-ok" id="alertaOk">✓ ¡Listo! Te avisamos cuando vuelva el stock.</p>
+  </div>
 </div>
 
 <script type="module">
@@ -1240,38 +1230,50 @@ window.aVolver = function() {
 };
 
 // ── Cargar productos desde Firestore ──
+let productosCache = []; // guardamos para abrir detalle por id
+
+function colorToHex(nombre) {
+  const map = {
+    'negro':'#1a1a1a','blanco':'#f5f4f0','gris':'#888','crudo':'#e8e0d0',
+    'oliva':'#6b7c4a','rojo':'#c0392b','azul':'#2980b9','verde':'#27ae60',
+    'beige':'#d4c5a9','marron':'#7b5e3a','naranja':'#e67e22','violeta':'#8e44ad',
+    'rosa':'#e91e8c','celeste':'#87ceeb','blanco roto':'#eeece8','negro vintage':'#2c2c2c',
+    'natural':'#d4c5a9',
+  };
+  const key = nombre.toLowerCase().trim();
+  return map[key] || '#cccccc';
+}
+
 function renderProductos(productos) {
+  productosCache = productos;
   const grid = document.getElementById('grid');
   if(!productos.length){
     grid.innerHTML = `<p style="font-family:'Space Mono',monospace;font-size:10px;color:#888;letter-spacing:.12em;text-transform:uppercase;padding:40px 0;grid-column:1/-1">Cargando colección...</p>`;
     return;
   }
   grid.innerHTML = productos.map(p=>{
-    const total = (p.s||0)+(p.m||0)+(p.l||0)+(p.xl||0);
-    const sizes = ['S','M','L','XL'].map(t=>{
-      const k = t.toLowerCase();
-      return `<div class="sz${p[k]>0?' av':''}">${t}</div>`;
-    }).join('');
     const badge = p.badge ? `<span class="pbadge${p.badge==='NUEVO'||p.badge==='HOT'?' lt':''}">${p.badge}</span>` : '';
-    const colStr = (p.colores||[]).join(' / ')||'—';
+    const totalStock = (p.s||0)+(p.m||0)+(p.l||0)+(p.xl||0);
+    const colores = p.colores||[];
+    const dotsHtml = colores.length
+      ? `<div class="pcolors">${colores.map(c=>`<span class="pcolor-dot" style="background:${colorToHex(c)}" title="${c}"></span>`).join('')}</div>`
+      : `<span style="font-size:11px;color:var(--g7)">—</span>`;
     return `
-      <div class="pcard" data-cat="${p.cat||''}">
+      <div class="pcard" data-cat="${p.cat||''}" onclick="openDetalle('${p.id}')">
         <div class="pimg">
           <span class="ph">👕</span>
           <span class="ph-label">Foto producto</span>
           ${badge}
-          ${total===0?'<span class="pbadge">AGOTADO</span>':''}
+          ${totalStock===0?'<span class="pbadge">AGOTADO</span>':''}
           <div class="povl">
-            <button class="povl-btn p" onclick="add('${p.nombre.replace(/'/g,"\\'")}',${p.precio},'M')" ${total===0?'disabled':''}>+ Agregar</button>
-            <button class="povl-btn s" onclick="goProbador()">Probar 👁</button>
+            <button class="povl-btn p">VER DETALLE →</button>
           </div>
         </div>
         <div class="pinfo">
           <div class="pname">${p.nombre}</div>
-          <div class="psub">${colStr}</div>
-          <div class="pfoot">
+          <div class="pfoot" style="margin-top:8px">
             <div class="pprice">$${(p.precio||0).toLocaleString('es-UY')}</div>
-            <div class="psizes">${sizes}</div>
+            ${dotsHtml}
           </div>
         </div>
       </div>`;
@@ -1283,6 +1285,252 @@ function renderProductos(productos) {
   });
 }
 
+// ── Panel detalle ──
+let detalleActual = null; // { productoId, colorSel, talleSel }
+
+window.openDetalle = function(id) {
+  const p = productosCache.find(x=>x.id===id);
+  if(!p) return;
+  detalleActual = { productoId: id, producto: p, colorSel: null, talleSel: null };
+  renderDetalle(p);
+  document.getElementById('detPanel').classList.add('on');
+  document.getElementById('ovlDet').classList.add('on');
+};
+
+window.closeDetalle = function() {
+  document.getElementById('detPanel').classList.remove('on');
+  document.getElementById('ovlDet').classList.remove('on');
+};
+
+function renderDetalle(p) {
+  const colores  = p.colores || [];
+  const badge    = p.badge ? `<span class="pbadge${p.badge==='NUEVO'||p.badge==='HOT'?' lt':''}" style="position:static;display:inline-block;margin-bottom:10px">${p.badge}</span>` : '';
+  const colorBtns = colores.map(c=>`
+    <button class="det-color-btn" style="background:${colorToHex(c)}" title="${c}"
+      onclick="selColor(this,'${c}')"></button>`).join('');
+
+  document.getElementById('detBody').innerHTML = `
+    <div class="det-img">
+      <span class="ph">👕</span>
+      <span class="ph-label">Foto producto</span>
+    </div>
+    <div class="det-info">
+      ${badge}
+      <div class="det-nombre">${p.nombre}</div>
+      <div class="det-precio">$${(p.precio||0).toLocaleString('es-UY')}</div>
+
+      ${colores.length ? `
+      <div class="det-sec">Color</div>
+      <div class="det-colores">${colorBtns}</div>
+      <div class="det-color-label" id="detColorLabel">Seleccioná un color</div>
+      ` : ''}
+
+      <div class="det-sec">Talle</div>
+      <div class="det-talles" id="detTalles">
+        ${renderTalleBtns(p, null)}
+      </div>
+      <div class="det-talle-hint" id="detTalleHint">Seleccioná tu talle</div>
+
+      <button class="det-add-btn" id="detAddBtn" disabled onclick="agregarDesdeDetalle()">
+        SELECCIONÁ COLOR Y TALLE
+      </button>
+      <button class="det-probador-link" onclick="abrirProbadorEnDetalle()">
+        👁 No sé mi talle — usar el asesor
+      </button>
+    </div>
+
+    <div class="det-asesor" id="detAsesor" style="display:none">
+      <div class="det-asesor-title">Asesor de talle</div>
+      <div class="asesor-widget" style="background:var(--g1);border:none;padding:24px">
+        <div class="asesor-step active" id="detAStep1">
+          <div class="asesor-inputs">
+            <div class="asesor-inp-wrap">
+              <label>Ancho (cm)</label>
+              <input type="number" id="detAAncho" placeholder="52" min="30" max="80">
+              <p class="asesor-inp-hint">De axila a axila</p>
+            </div>
+            <div class="asesor-inp-wrap">
+              <label>Largo (cm)</label>
+              <input type="number" id="detALargo" placeholder="70" min="40" max="90">
+              <p class="asesor-inp-hint">De cuello a borde</p>
+            </div>
+          </div>
+          <button class="asesor-cta" onclick="detACalcular()">ENCONTRAR MI TALLE →</button>
+        </div>
+        <div class="asesor-step" id="detAStep2">
+          <button class="asesor-back" onclick="detAVolver()">← Volver</button>
+          <div class="asesor-bubble">
+            <div class="asesor-bubble-tag">Asesor Toussen</div>
+            <div id="detABubble"></div>
+          </div>
+          <div class="asesor-cards" id="detACards"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderTalleBtns(p, colorSel) {
+  // Por ahora el stock es por talle general (no por color)
+  // Cuando Christian agregue stock por color, se puede extender
+  return ['S','M','L','XL'].map(t=>{
+    const k = t.toLowerCase();
+    const stock = p[k] || 0;
+    const cls = stock === 0 ? 'agotado' : '';
+    return `<button class="det-talle-btn ${cls}" onclick="selTalle(this,'${t}',${stock})">${t}</button>`;
+  }).join('');
+}
+
+window.selColor = function(btn, color) {
+  document.querySelectorAll('.det-color-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  detalleActual.colorSel = color;
+  document.getElementById('detColorLabel').textContent = color;
+  actualizarBtnAgregar();
+};
+
+window.selTalle = function(btn, talle, stock) {
+  if(stock === 0) {
+    // Guardar contexto para la alerta
+    detalleActual.talleSel = talle;
+    abrirStockPopup();
+    return;
+  }
+  document.querySelectorAll('.det-talle-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  detalleActual.talleSel = talle;
+  document.getElementById('detTalleHint').textContent = `Talle ${talle} seleccionado`;
+  actualizarBtnAgregar();
+};
+
+function actualizarBtnAgregar() {
+  const p = detalleActual.producto;
+  const colores = p.colores || [];
+  const btn = document.getElementById('detAddBtn');
+  const colorOk = colores.length === 0 || detalleActual.colorSel;
+  const talleOk = detalleActual.talleSel;
+  if(colorOk && talleOk) {
+    btn.disabled = false;
+    btn.textContent = '+ AGREGAR AL CARRITO';
+  } else if(!colorOk && !talleOk) {
+    btn.textContent = 'SELECCIONÁ COLOR Y TALLE';
+  } else if(!colorOk) {
+    btn.textContent = 'SELECCIONÁ UN COLOR';
+  } else {
+    btn.textContent = 'SELECCIONÁ UN TALLE';
+  }
+}
+
+window.agregarDesdeDetalle = function() {
+  const p = detalleActual.producto;
+  const color = detalleActual.colorSel || (p.colores||[])[0] || '—';
+  const talle = detalleActual.talleSel;
+  add(`${p.nombre} (${color})`, p.precio, talle);
+  closeDetalle();
+};
+
+window.abrirProbadorEnDetalle = function() {
+  const sec = document.getElementById('detAsesor');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if(sec.style.display === 'block') {
+    sec.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+};
+
+// Asesor dentro del detalle
+window.detACalcular = function() {
+  const a = parseFloat(document.getElementById('detAAncho').value);
+  const l = parseFloat(document.getElementById('detALargo').value);
+  if(!a || !l) { alert('Ingresá ancho y largo.'); return; }
+  const p    = detalleActual.producto;
+  const tipo = (p.cat === 'buzos' || p.cat === 'hoodies') ? 'buzo' : 'remera';
+  const data = ASESOR_DB[tipo] || ASESOR_DB['remera'];
+  let regular = data[0], minDist = Infinity;
+  data.forEach(t=>{
+    const ca = (t.ancho[0]+t.ancho[1])/2;
+    const cl = (t.largo[0]+t.largo[1])/2;
+    const d  = Math.abs(a-ca)+Math.abs(l-cl);
+    if(d<minDist){ minDist=d; regular=t; }
+  });
+  const ri = data.indexOf(regular);
+  const slim     = ri > 0             ? data[ri-1] : null;
+  const oversize = ri < data.length-1 ? data[ri+1] : null;
+  let txt = `Tu talle base es <strong>${regular.talle}</strong>.`;
+  if(slim)     txt += ` ${slim.talle} te queda más ajustado.`;
+  if(oversize) txt += ` ${oversize.talle} te da un look oversize.`;
+  document.getElementById('detABubble').innerHTML = txt;
+  const opciones = [];
+  if(slim)     opciones.push({...slim, fit:'slim', label:'Slim'});
+               opciones.push({...regular, fit:'regular', label:'Regular'});
+  if(oversize) opciones.push({...oversize, fit:'oversize', label:'Oversize'});
+  document.getElementById('detACards').innerHTML = opciones.map(op=>`
+    <div class="asesor-card${op.fit==='regular'?' highlight':''}">
+      <div class="asesor-card-l">
+        <span class="asesor-fit-badge badge-${op.fit}">${op.label}</span>
+        <span class="asesor-card-talle">Talle ${op.talle}</span>
+      </div>
+      <button class="asesor-add-btn" onclick="selTalleDesdeAsesor('${op.talle}')">Seleccionar</button>
+    </div>`).join('');
+  document.getElementById('detAStep1').classList.remove('active');
+  document.getElementById('detAStep2').classList.add('active');
+};
+
+window.detAVolver = function() {
+  document.getElementById('detAStep2').classList.remove('active');
+  document.getElementById('detAStep1').classList.add('active');
+};
+
+window.selTalleDesdeAsesor = function(talle) {
+  // Simular click en el botón de talle correspondiente
+  const btns = document.querySelectorAll('.det-talle-btn');
+  btns.forEach(b=>{ if(b.textContent===talle) b.click(); });
+  // Scroll al botón agregar
+  document.getElementById('detAddBtn').scrollIntoView({behavior:'smooth', block:'nearest'});
+};
+
+// ── Popup stock agotado ──
+let alertaContexto = null;
+
+function abrirStockPopup() {
+  const p = detalleActual.producto;
+  alertaContexto = {
+    productoId: detalleActual.productoId,
+    nombre: p.nombre,
+    talle: detalleActual.talleSel,
+    color: detalleActual.colorSel || '—'
+  };
+  document.getElementById('alertaEmail').value = '';
+  document.getElementById('alertaOk').classList.remove('on');
+  document.getElementById('stockPopup').classList.add('on');
+}
+
+window.closeStockPopup = function() {
+  document.getElementById('stockPopup').classList.remove('on');
+  alertaContexto = null;
+};
+
+window.registrarAlerta = async function() {
+  const email = document.getElementById('alertaEmail').value.trim();
+  if(!email || !email.includes('@')) { alert('Ingresá un email válido.'); return; }
+  if(!alertaContexto) return;
+  try {
+    await addDoc(collection(db,'alertasStock'), {
+      email,
+      productoId: alertaContexto.productoId,
+      nombre: alertaContexto.nombre,
+      talle: alertaContexto.talle,
+      color: alertaContexto.color,
+      fecha: serverTimestamp(),
+      enviado: false
+    });
+    document.getElementById('alertaOk').classList.add('on');
+    document.getElementById('alertaEmail').style.display = 'none';
+    document.querySelector('.stock-popup-btn').style.display = 'none';
+    setTimeout(()=>closeStockPopup(), 2500);
+  } catch(e) {
+    alert('Hubo un error. Intentá de nuevo.');
+  }
+};
+
 onSnapshot(query(collection(db,'productos'),orderBy('nombre')), snap => {
   const prods = snap.docs.map(d=>({id:d.id,...d.data()}));
   renderProductos(prods);
@@ -1293,6 +1541,29 @@ document.querySelectorAll('button, a, .pcard').forEach(el=>{
   el.addEventListener('mouseenter',()=>cur.classList.add('big'));
   el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
 });
+</script>
+
+<!-- EmailJS — reemplazar con datos reales cuando esté configurado -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+// ── EmailJS config (PLACEHOLDERS — completar cuando Christian cree el mail) ──
+const EMAILJS_SERVICE_ID  = 'SERVICE_ID_PLACEHOLDER';
+const EMAILJS_TEMPLATE_ID = 'TEMPLATE_ID_PLACEHOLDER';
+const EMAILJS_PUBLIC_KEY  = 'PUBLIC_KEY_PLACEHOLDER';
+
+if(EMAILJS_PUBLIC_KEY !== 'PUBLIC_KEY_PLACEHOLDER') {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
+// Esta función la llama el admin.html cuando Christian hace "Pago OK" o repone stock
+// Se exporta al window para que admin pueda llamarla si ambos están abiertos,
+// pero principalmente el admin.html tendrá su propia copia de esta lógica.
+window.enviarAlertasStock = async function(productoId, nombre, talle) {
+  if(EMAILJS_PUBLIC_KEY === 'PUBLIC_KEY_PLACEHOLDER') return;
+  // Buscar todos los que se anotaron para este producto+talle y no recibieron aviso aún
+  // (Esta función se ejecuta desde admin.html — ver admin)
+};
+</script>
 </script>
 </body>
 </html>
