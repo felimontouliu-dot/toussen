@@ -283,6 +283,71 @@
   .btn-wa:hover { background:#1da851; }
   .chk-mp-note { font-size:10px; color:var(--g5); text-align:center; margin-top:8px; line-height:1.6; }
   #ovlChk { z-index:1001; }
+
+  /* ── Panel seguimiento ── */
+  .seg-panel { position:fixed; top:0; right:-520px; width:480px; height:100vh; background:var(--g9); border-left:1px solid var(--g7); z-index:1004; transition:right .3s cubic-bezier(.25,.46,.45,.94); display:flex; flex-direction:column; color:var(--g0); }
+  .seg-panel.on { right:0; }
+  #ovlSeg { z-index:1003; }
+
+  .seg-hd { padding:24px 28px; border-bottom:1px solid var(--g7); display:flex; align-items:center; justify-content:space-between; }
+  .seg-hd h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:.08em; }
+  .seg-body { flex:1; overflow-y:auto; padding:28px; }
+
+  /* Formulario de búsqueda */
+  .seg-form { margin-bottom:28px; }
+  .seg-form-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--g5); margin-bottom:16px; }
+  .seg-row { display:flex; gap:8px; }
+  .seg-input { flex:1; padding:12px 14px; border:1px solid var(--g7); background:#fff; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--g0); outline:none; transition:border-color .2s; }
+  .seg-input:focus { border-color:var(--g0); }
+  .seg-btn { background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:12px 18px; border:none; cursor:pointer; white-space:nowrap; transition:background .2s; }
+  .seg-btn:hover { background:var(--g2); }
+
+  /* Resultado del seguimiento */
+  .seg-result { display:none; }
+  .seg-result.on { display:block; }
+  .seg-numero { font-family:'Bebas Neue',sans-serif; font-size:38px; letter-spacing:.06em; color:var(--g0); margin-bottom:4px; }
+  .seg-meta { font-size:12px; color:var(--g5); margin-bottom:24px; }
+  .seg-items { background:var(--g8); padding:14px 16px; margin-bottom:24px; }
+  .seg-items-title { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--g5); margin-bottom:10px; }
+  .seg-item-row { display:flex; justify-content:space-between; font-size:12px; color:var(--g0); padding:3px 0; border-bottom:1px solid var(--g7); }
+  .seg-item-row:last-child { border:none; }
+  .seg-total-row { display:flex; justify-content:space-between; margin-top:8px; }
+  .seg-total-row span:first-child { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--g5); }
+  .seg-total-row span:last-child { font-family:'Bebas Neue',sans-serif; font-size:22px; }
+
+  /* Timeline de estados */
+  .seg-timeline { display:flex; flex-direction:column; gap:0; }
+  .seg-step { display:flex; gap:16px; position:relative; }
+  .seg-step:not(:last-child) .seg-step-line { position:absolute; left:11px; top:24px; width:2px; height:calc(100% + 0px); background:var(--g7); }
+  .seg-step-line.done { background:var(--g0); }
+  .seg-dot-wrap { display:flex; flex-direction:column; align-items:center; flex-shrink:0; padding-top:4px; position:relative; z-index:1; }
+  .seg-dot { width:22px; height:22px; border-radius:50%; border:2px solid var(--g7); background:var(--g9); display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .seg-dot.done { border-color:var(--g0); background:var(--g0); }
+  .seg-dot.current { border-color:var(--g0); background:var(--g9); box-shadow:0 0 0 3px rgba(0,0,0,.08); }
+  .seg-step-info { padding:2px 0 24px; }
+  .seg-step-label { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--g5); }
+  .seg-step-label.done { color:var(--g0); }
+  .seg-step-label.current { color:var(--g0); }
+  .seg-step-date { font-size:11px; color:var(--g5); margin-top:3px; }
+  .seg-error { font-family:'Space Mono',monospace; font-size:10px; color:#c0392b; letter-spacing:.1em; text-transform:uppercase; padding:16px 0; display:none; }
+  .seg-error.on { display:block; }
+
+  /* Pantalla post-compra */
+  .post-panel { position:fixed; inset:0; background:var(--g9); z-index:1010; display:none; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center; }
+  .post-panel.on { display:flex; }
+  .post-ico { font-size:52px; margin-bottom:20px; }
+  .post-titulo { font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:.04em; color:var(--g0); line-height:1; margin-bottom:8px; }
+  .post-sub { font-size:13px; color:var(--g5); margin-bottom:32px; line-height:1.7; max-width:380px; }
+  .post-numero { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--g5); margin-bottom:6px; }
+  .post-numero strong { color:var(--g0); font-size:18px; letter-spacing:.1em; }
+  .post-actions { display:flex; flex-direction:column; gap:10px; width:100%; max-width:320px; margin-top:28px; }
+  .post-btn-seg { background:var(--g0); color:var(--g9); font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:14px; border:none; cursor:pointer; transition:background .2s; }
+  .post-btn-seg:hover { background:var(--g2); }
+  .post-btn-seguir { background:transparent; border:1px solid var(--g7); color:var(--g0); font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:14px; cursor:pointer; transition:all .2s; }
+  .post-btn-seguir:hover { border-color:var(--g0); }
+  .post-error { background:#fff0f0; border:1px solid #f5c6cb; padding:28px; border-radius:0; max-width:400px; width:100%; }
+  .post-error .post-titulo { color:#c0392b; font-size:38px; }
+  .post-error .post-sub { color:#666; }
 </style>
 </head>
 <body>
@@ -321,7 +386,7 @@
       <li><a href="#productos">Colección</a></li>
       <li><a href="#vto">Probador</a></li>
       <li><a href="#">Nosotros</a></li>
-      <li><a href="#">Contacto</a></li>
+      <li><a href="#" onclick="openSeguimiento();return false;">Seguimiento</a></li>
     </ul>
     <button class="cart-btn" onclick="openCart()">
       Carrito <span class="badge" id="cnt">0</span>
@@ -353,16 +418,16 @@
           <img src="hero1.jpg" alt="Toussen Drop 001">
         </div>
         <div class="hero-slide">
-          <img src="hero2.jpg" alt="Toussen Drop 001">
+          <img data-src="hero2.jpg" alt="Toussen Drop 001">
         </div>
         <div class="hero-slide">
-          <img src="hero3.jpg" alt="Toussen Drop 001">
+          <img data-src="hero3.jpg" alt="Toussen Drop 001">
         </div>
         <div class="hero-slide">
-          <img src="hero4.jpg" alt="Toussen Drop 001">
+          <img data-src="hero4.jpg" alt="Toussen Drop 001">
         </div>
         <div class="hero-slide">
-          <img src="hero5.jpg" alt="Toussen Drop 001">
+          <img data-src="hero5.jpg" alt="Toussen Drop 001">
         </div>
       </div>
 
@@ -655,9 +720,44 @@
 
 <div class="toast" id="toast">✓ Agregado al carrito</div>
 
+<!-- ── OVERLAY SEGUIMIENTO ── -->
+<div class="ovl" id="ovlSeg" onclick="closeSeguimiento()"></div>
+
+<!-- ── PANEL SEGUIMIENTO ── -->
+<div class="seg-panel" id="segPanel">
+  <div class="seg-hd">
+    <h3>SEGUIMIENTO</h3>
+    <button class="close-c" onclick="closeSeguimiento()">✕</button>
+  </div>
+  <div class="seg-body">
+    <div class="seg-form">
+      <div class="seg-form-title">Ingresá tu número de pedido y email</div>
+      <div style="margin-bottom:10px">
+        <input class="seg-input" id="segNroPedido" placeholder="TSN-00001" type="text" style="width:100%;margin-bottom:8px">
+        <div class="seg-row">
+          <input class="seg-input" id="segEmail" placeholder="tu@email.com" type="email">
+          <button class="seg-btn" onclick="buscarPedido()">BUSCAR</button>
+        </div>
+      </div>
+      <div class="seg-error" id="segError">Pedido no encontrado. Verificá los datos.</div>
+    </div>
+    <div class="seg-result" id="segResult">
+      <div class="seg-numero" id="segNroDisplay"></div>
+      <div class="seg-meta" id="segMetaDisplay"></div>
+      <div class="seg-items" id="segItemsDisplay"></div>
+      <div class="seg-timeline" id="segTimeline"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANTALLA POST-COMPRA ── -->
+<div class="post-panel" id="postPanel">
+  <div id="postContenido"></div>
+</div>
+
 <script type="module">
 import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp }
+import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, getDoc, getDocs, doc, updateDoc, deleteDoc, serverTimestamp, where }
                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -701,6 +801,18 @@ setInterval(() => {
   goSlide((currentSlide + 1) % slides.length);
 }, 4000);
 
+// ── Lazy loading de fotos del slider ──
+// La primera foto (hero1.jpg) carga sola al inicio.
+// Las demás se cargan en segundo plano una vez que la página ya está lista.
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero-slide img[data-src]').forEach((img, i) => {
+    setTimeout(() => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    }, i * 300);
+  });
+});
+
 // ── Carrito ──
 let cart = [];
 
@@ -733,9 +845,15 @@ function showToast() {
   setTimeout(()=>t.classList.remove('on'),2500); openCart();
 }
 
-// ── Mercado Pago ──
-// ← PEGAR ACÁ EL ACCESS TOKEN DE MP
+// ── Mercado Pago access token ──
 const MP_ACCESS_TOKEN = 'APP_USR-6276280614990924-041421-ff90fce9b1151422f7daf60f2ef1bfa1-3335977649';
+
+// ── Generador de número de pedido ──
+async function generarNroPedido() {
+  const snap = await getDocs(collection(db,'pedidos'));
+  const nro  = snap.size + 1;
+  return 'TSN-' + String(nro).padStart(5,'0');
+}
 
 // ── Checkout ──
 window.openCheckout = function() {
@@ -763,27 +881,22 @@ function getDatosCliente() {
   return { nombre, email, tel };
 }
 
-async function guardarPedido(metodoPago) {
-  const datos = getDatosCliente();
-  if(!datos) return null;
-  const total   = cart.reduce((s,i)=>s+i.price,0);
-  const detalle = cart.map(i=>`${i.name} (${i.talle})`).join(', ');
-  const now = new Date();
-  const fechaStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  try {
-    await addDoc(collection(db,'pedidos'),{
-      nombre:datos.nombre, email:datos.email, telefono:datos.tel,
-      detalle, total, metodoPago,
-      estado:'PENDIENTE', fecha:serverTimestamp(), fechaStr,
-      items: cart.map(i=>({name:i.name,price:i.price,talle:i.talle}))
-    });
-    return { datos, total, detalle };
-  } catch(e) {
-    alert('Hubo un error al registrar el pedido. Intentá de nuevo.');
-    return null;
+// Descuenta stock real en Firestore
+async function descontarStock(items) {
+  for(const item of items) {
+    if(!item.productoId) continue;
+    const ref  = doc(db,'productos',item.productoId);
+    const snap = await getDoc(ref);
+    if(!snap.exists()) continue;
+    const data = snap.data();
+    const key  = (item.talle||'').toLowerCase();
+    if(key && data[key] !== undefined && data[key] > 0) {
+      await updateDoc(ref, { [key]: data[key] - 1 });
+    }
   }
 }
 
+// ── PAGAR CON MERCADO PAGO ──
 window.pagarMP = async function() {
   const datos = getDatosCliente();
   if(!datos) return;
@@ -795,28 +908,41 @@ window.pagarMP = async function() {
   btn.disabled = true;
   btn.innerHTML = '<span>⏳</span> Procesando...';
   try {
-    const items = cart.map(i=>({ title:i.name, quantity:1, unit_price:i.price, currency_id:'UYU' }));
+    const nroPedido = await generarNroPedido();
+    const total     = cart.reduce((s,i)=>s+i.price,0);
+    const detalle   = cart.map(i=>`${i.name} (${i.talle})`).join(', ');
+    const now       = new Date();
+    const fechaStr  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const docRef = await addDoc(collection(db,'pedidos'), {
+      nroPedido,
+      nombre: datos.nombre, email: datos.email, telefono: datos.tel,
+      detalle, total, metodoPago: 'MERCADO_PAGO',
+      estado: 'PENDIENTE_MP',
+      fecha: serverTimestamp(), fechaStr,
+      items: cart.map(i=>({name:i.name, price:i.price, talle:i.talle})),
+      historial: [{ estado:'PENDIENTE_MP', fecha: fechaStr }]
+    });
+    const mpItems = cart.map(i=>({ title:i.name, quantity:1, unit_price:i.price, currency_id:'UYU' }));
     const res = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${MP_ACCESS_TOKEN}` },
       body: JSON.stringify({
-        items,
+        items: mpItems,
         payer:{ name:datos.nombre, email:datos.email },
         back_urls:{
-          success: window.location.origin+'/index.html?pago=ok',
-          failure: window.location.origin+'/index.html?pago=error',
-          pending: window.location.origin+'/index.html?pago=pendiente'
+          success: window.location.origin + window.location.pathname + '?pago=ok&pid=' + docRef.id,
+          failure: window.location.origin + window.location.pathname + '?pago=error&pid=' + docRef.id,
+          pending: window.location.origin + window.location.pathname + '?pago=pendiente&pid=' + docRef.id
         },
-        auto_return:'approved',
-        external_reference: datos.email+'_'+Date.now()
+        auto_return: 'approved',
+        external_reference: nroPedido
       })
     });
     const pref = await res.json();
     if(pref.init_point) {
-      await guardarPedido('MERCADO_PAGO');
       cart=[]; updateCart(); closeCheckout();
       window.location.href = pref.init_point;
-    } else { throw new Error(); }
+    } else { throw new Error('Sin init_point'); }
   } catch(e) {
     alert('Error al conectar con Mercado Pago. Intentá con transferencia bancaria.');
     btn.disabled = false;
@@ -824,40 +950,199 @@ window.pagarMP = async function() {
   }
 };
 
+// ── PAGAR POR TRANSFERENCIA ──
 window.pagarTransferencia = async function() {
-  const resultado = await guardarPedido('TRANSFERENCIA');
-  if(!resultado) return;
-  const { datos, total, detalle } = resultado;
-
-  // ─ COMPLETAR CON LOS DATOS BANCARIOS DE TOUSSEN ─
-  const banco   = 'BANCO_PLACEHOLDER';
-  const titular = 'TITULAR_PLACEHOLDER';
-  const cuenta  = 'CUENTA_PLACEHOLDER';
-  const rut     = 'RUT_PLACEHOLDER';
-
-  const msg = `Hola Toussen! 👋
+  const datos = getDatosCliente();
+  if(!datos) return;
+  try {
+    const nroPedido = await generarNroPedido();
+    const total     = cart.reduce((s,i)=>s+i.price,0);
+    const detalle   = cart.map(i=>`${i.name} (${i.talle})`).join(', ');
+    const now       = new Date();
+    const fechaStr  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    await addDoc(collection(db,'pedidos'), {
+      nroPedido,
+      nombre: datos.nombre, email: datos.email, telefono: datos.tel,
+      detalle, total, metodoPago: 'TRANSFERENCIA',
+      estado: 'RESERVADO',
+      fecha: serverTimestamp(), fechaStr,
+      items: cart.map(i=>({name:i.name, price:i.price, talle:i.talle})),
+      historial: [{ estado:'RESERVADO', fecha: fechaStr }]
+    });
+    const banco   = 'BANCO_PLACEHOLDER';
+    const titular = 'TITULAR_PLACEHOLDER';
+    const cuenta  = 'CUENTA_PLACEHOLDER';
+    const rut     = 'RUT_PLACEHOLDER';
+    const msg = `Hola Toussen! 👋
 Quiero pagar mi pedido por transferencia.
 
-*Pedido:*
+*Pedido:* ${nroPedido}
 ${detalle}
-
 *Total: $${total.toLocaleString('es-UY')}*
 
 *Mis datos:*
-Nombre: ${datos.nombre}
-Email: ${datos.email}
+Nombre: ${datos.nombre} / Email: ${datos.email}
 
 *Datos bancarios Toussen:*
-Banco: ${banco}
-Titular: ${titular}
-Cuenta: ${cuenta}
-RUT: ${rut}
+Banco: ${banco} / Titular: ${titular} / Cuenta: ${cuenta} / RUT: ${rut}
 
-Avísame cuando hagas la transferencia 🙏`;
-
-  cart=[]; updateCart(); closeCheckout();
-  window.open(`https://wa.me/598XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+Avísame cuando quede acreditado 🙏`;
+    const itemsCarrito = [...cart];
+    cart=[]; updateCart(); closeCheckout();
+    mostrarPostCompra('transferencia', nroPedido, datos.email, total, itemsCarrito);
+    window.open(`https://wa.me/598XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+  } catch(e) {
+    alert('Hubo un error al registrar el pedido. Intentá de nuevo.');
+  }
 };
+
+// ── PANTALLA POST-COMPRA ──
+function mostrarPostCompra(tipo, nroPedido, email, total, items) {
+  const cont = document.getElementById('postContenido');
+  if(tipo === 'ok') {
+    cont.innerHTML = `
+      <div class="post-ico">✅</div>
+      <div class="post-titulo">¡PEDIDO<br>CONFIRMADO!</div>
+      <p class="post-sub">Tu pago fue procesado exitosamente. Ya podés seguir tu pedido.</p>
+      <div class="post-numero">Número de pedido<br><strong>${nroPedido}</strong></div>
+      <div class="post-actions">
+        <button class="post-btn-seg" onclick="abrirSeguimientoDirecto('${nroPedido}','${email}')">VER MI PEDIDO</button>
+        <button class="post-btn-seguir" onclick="cerrarPostCompra()">SEGUIR COMPRANDO</button>
+      </div>`;
+  } else if(tipo === 'transferencia') {
+    cont.innerHTML = `
+      <div class="post-ico">📲</div>
+      <div class="post-titulo">¡PEDIDO<br>RESERVADO!</div>
+      <p class="post-sub">Tu pedido quedó reservado con el número <strong>${nroPedido}</strong>. Una vez que confirmemos el pago, se actualizará automáticamente.</p>
+      <div class="post-numero">Número de pedido<br><strong>${nroPedido}</strong></div>
+      <p style="font-size:11px;color:var(--g5);margin-top:8px;">Usá tu email <strong>${email}</strong> para hacer el seguimiento.</p>
+      <div class="post-actions">
+        <button class="post-btn-seg" onclick="abrirSeguimientoDirecto('${nroPedido}','${email}')">SEGUIR MI PEDIDO</button>
+        <button class="post-btn-seguir" onclick="cerrarPostCompra()">SEGUIR COMPRANDO</button>
+      </div>`;
+  } else {
+    cont.innerHTML = `
+      <div class="post-error">
+        <div class="post-ico">❌</div>
+        <div class="post-titulo">PAGO NO<br>PROCESADO</div>
+        <p class="post-sub">Hubo un problema con tu pago. No se realizó ningún cobro. Podés intentar de nuevo o pagar por transferencia.</p>
+        <div class="post-actions" style="margin-top:20px">
+          <button class="post-btn-seg" onclick="cerrarPostCompra()">VOLVER A LA TIENDA</button>
+        </div>
+      </div>`;
+  }
+  document.getElementById('postPanel').classList.add('on');
+}
+
+window.cerrarPostCompra = function() {
+  document.getElementById('postPanel').classList.remove('on');
+};
+
+// ── RETORNO DESDE MERCADO PAGO ──
+async function manejarRetornoMP() {
+  const params = new URLSearchParams(window.location.search);
+  const pago   = params.get('pago');
+  const pid    = params.get('pid');
+  if(!pago || !pid) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  if(pago === 'ok') {
+    try {
+      const ref  = doc(db,'pedidos',pid);
+      const snap = await getDoc(ref);
+      if(!snap.exists()) return;
+      const data = snap.data();
+      const now  = new Date();
+      const fechaStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      await updateDoc(ref, {
+        estado: 'CONFIRMADO',
+        historial: [...(data.historial||[]), { estado:'CONFIRMADO', fecha: fechaStr }]
+      });
+      await descontarStock(data.items||[]);
+      mostrarPostCompra('ok', data.nroPedido, data.email, data.total, data.items||[]);
+    } catch(e) { mostrarPostCompra('error','','',0,[]); }
+  } else {
+    try { await deleteDoc(doc(db,'pedidos',pid)); } catch(e) {}
+    mostrarPostCompra('error','','',0,[]);
+  }
+}
+
+// ── PANEL SEGUIMIENTO ──
+window.openSeguimiento = function() {
+  document.getElementById('segPanel').classList.add('on');
+  document.getElementById('ovlSeg').classList.add('on');
+  document.getElementById('segResult').classList.remove('on');
+  document.getElementById('segError').classList.remove('on');
+  document.getElementById('segNroPedido').value = '';
+  document.getElementById('segEmail').value = '';
+};
+window.closeSeguimiento = function() {
+  document.getElementById('segPanel').classList.remove('on');
+  document.getElementById('ovlSeg').classList.remove('on');
+};
+window.abrirSeguimientoDirecto = function(nro, email) {
+  cerrarPostCompra();
+  document.getElementById('segNroPedido').value = nro;
+  document.getElementById('segEmail').value = email;
+  document.getElementById('segPanel').classList.add('on');
+  document.getElementById('ovlSeg').classList.add('on');
+  buscarPedido();
+};
+
+const ESTADOS_SEG = [
+  { key:'RESERVADO',  label:'Pedido reservado', icon:'🕐' },
+  { key:'CONFIRMADO', label:'Pago confirmado',   icon:'✅' },
+  { key:'EN_REPARTO', label:'En reparto',        icon:'🚚' },
+  { key:'ENTREGADO',  label:'Entregado',         icon:'📦' },
+];
+
+window.buscarPedido = async function() {
+  const nro   = document.getElementById('segNroPedido').value.trim().toUpperCase();
+  const email = document.getElementById('segEmail').value.trim().toLowerCase();
+  const errEl = document.getElementById('segError');
+  const resEl = document.getElementById('segResult');
+  errEl.classList.remove('on');
+  resEl.classList.remove('on');
+  if(!nro || !email) { errEl.classList.add('on'); return; }
+  try {
+    const q    = query(collection(db,'pedidos'), where('nroPedido','==',nro));
+    const snap = await getDocs(q);
+    if(snap.empty) { errEl.classList.add('on'); return; }
+    const pedido = snap.docs[0].data();
+    if(pedido.email.toLowerCase() !== email) { errEl.classList.add('on'); return; }
+    if(pedido.estado === 'PENDIENTE_MP') { errEl.classList.add('on'); return; }
+    document.getElementById('segNroDisplay').textContent = pedido.nroPedido;
+    document.getElementById('segMetaDisplay').textContent =
+      `${pedido.fechaStr} · ${pedido.metodoPago === 'TRANSFERENCIA' ? 'Transferencia' : 'Mercado Pago'} · ${pedido.nombre}`;
+    const itemsHtml = (pedido.items||[]).map(i=>
+      `<div class="seg-item-row"><span>${i.name} (${i.talle})</span><span>$${(i.price||0).toLocaleString('es-UY')}</span></div>`
+    ).join('');
+    document.getElementById('segItemsDisplay').innerHTML = `
+      <div class="seg-items-title">Detalle del pedido</div>
+      ${itemsHtml}
+      <div class="seg-total-row"><span>Total</span><span>$${(pedido.total||0).toLocaleString('es-UY')}</span></div>`;
+    const idxActual = ESTADOS_SEG.findIndex(e=>e.key===pedido.estado);
+    const historial = pedido.historial || [];
+    document.getElementById('segTimeline').innerHTML = ESTADOS_SEG.map((e,i)=>{
+      const done    = i < idxActual;
+      const current = i === idxActual;
+      const hist    = historial.find(h=>h.estado===e.key);
+      return `
+        <div class="seg-step">
+          <div class="seg-dot-wrap">
+            <div class="seg-dot${done?' done':(current?' current':'')}">${done?'✓':(current?e.icon:'')}</div>
+            ${i < ESTADOS_SEG.length-1 ? `<div class="seg-step-line${done?' done':''}" style="height:48px"></div>` : ''}
+          </div>
+          <div class="seg-step-info">
+            <div class="seg-step-label${done?' done':(current?' current':'')}">${e.label}</div>
+            ${hist ? `<div class="seg-step-date">${hist.fecha}</div>` : (current?'<div class="seg-step-date">En curso</div>':'')}
+          </div>
+        </div>`;
+    }).join('');
+    resEl.classList.add('on');
+  } catch(err) { errEl.classList.add('on'); }
+};
+
+manejarRetornoMP();
 
 // ── Filtros ──
 window.filt = function(btn, cat) {
